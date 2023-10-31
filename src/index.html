@@ -11,9 +11,44 @@
       <h1 class="title">
         To-do App
       </h1> 
-    </section>
+    </section> .main
+    <div class="modal" id="modal">
+      <fieldset>.modal > fieldset
+        <button data-close-button class="close-button">&times;</button>
+        <form action="">form
+          <legend>To-do info:</legend>
+          <div>
+            <!-- <label for="to-do">To-do item:</label> -->
+            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="40" placeholder="Enter your to-do"/>
+          </div>
+  
+          <div>
+            <!-- <label for="date">Due date:</label> -->
+            <input type="date" id="date" name="date" required minlength="10" maxlength="10" />
+          </div>
+
+          <div class="priority-container"><p>Priority:</p>
+            <button class="priority1 priority-btn">High</button>
+            <button class="priority2 priority-btn">Normal</button>
+            <button class="priority3 priority-btn">Low</button>
+          </div>
+          <div>
+            <!-- <label for="description">Description:</label> -->
+            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" ></textarea>
+
+          </div>
+          <div class="error-msg-container"> </div>
+          <div class="create-btn-container">
+            <button type="submit" class="create-todo-btn">
+              Create to-do
+            </button>
+          </div>
+        </form>
+      </fieldset>
+    </div>
+    <div id="overlay"></div>
     <section class="bottom-controls">
-      test.
+      .bottom-controls
     </section>
   </main>
   
