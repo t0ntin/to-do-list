@@ -1,3 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+}
+
+*::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+
+}
+
+/* html, body {
+  height: 100%;
+} */
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+
 /* @font-face {
   font-family: 'MyFont';
   src: url('./my-font.woff2') format('woff2'),
@@ -6,6 +40,28 @@
   font-style: normal;
   } */
 
+.main {
+  max-width: 400px;
+  height: 100vh;
+  border: 1px solid black;
+  position: relative;
+
+}
+.title-container {
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+}
+
 .title {
-  color: red;
+
+}
+
+.bottom-controls {
+  border: 1px solid black;
+  height: 100px;
+  width: 100vw;
+  position:absolute;
+  bottom: 0;
+  
 }
