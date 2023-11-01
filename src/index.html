@@ -19,7 +19,7 @@
           <legend>To-do info:</legend>
           <div>
             <!-- <label for="to-do">To-do item:</label> -->
-            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="40" placeholder="Enter your to-do"/>
+            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="40" placeholder="Enter your to-do" value="Finish the project"/>
           </div>
   
           <div>
@@ -34,12 +34,12 @@
           </div>
           <div>
             <!-- <label for="description">Description:</label> -->
-            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" ></textarea>
+            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description for the to-do item.</textarea>
 
           </div>
           <div class="error-msg-container"> </div>
           <div class="create-btn-container">
-            <button type="submit" class="create-todo-btn">
+            <button type="submit" id="create-todo-btn">
               Create to-do
             </button>
           </div>

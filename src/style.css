@@ -192,7 +192,7 @@ input::placeholder, textarea::placeholder {
   align-items: center;
 }
 
-.create-todo-btn {
+#create-todo-btn {
   display: inline-block;
   background-color: var(--SECONDARY-BG-COLOR);
   border-radius: 5px;
