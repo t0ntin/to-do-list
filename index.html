@@ -12,6 +12,14 @@
         To-do App
       </h1> 
     </section> .main
+
+    <!-- <section class="todo-item">
+      <li class="todo-title"></li>
+      <li class="todo-date"></li>
+      <li class="todo-priority"></li>
+      <li class="todo-description"></li>
+    </section> -->
+
     <div class="modal" id="modal">
       <fieldset>.modal > fieldset
         <button data-close-button class="close-button">&times;</button>
@@ -19,7 +27,7 @@
           <legend>To-do info:</legend>
           <div>
             <!-- <label for="to-do">To-do item:</label> -->
-            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="40" placeholder="Enter your to-do" value="Finish the project"/>
+            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="60" placeholder="Enter your to-do" value="This is what I have to do."/>
           </div>
   
           <div>
@@ -43,7 +51,7 @@
           </div>
           <div>
             <!-- <label for="description">Description:</label> -->
-            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description.</textarea>
+            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description of what I have to do.</textarea>
 
           </div>
           <div class="error-msg-container"> </div>
