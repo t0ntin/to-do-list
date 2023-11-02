@@ -15,7 +15,7 @@
     <div class="modal" id="modal">
       <fieldset>.modal > fieldset
         <button data-close-button class="close-button">&times;</button>
-        <form action="">form
+        <form action="" id="form">form
           <legend>To-do info:</legend>
           <div>
             <!-- <label for="to-do">To-do item:</label> -->
@@ -28,13 +28,22 @@
           </div>
 
           <div class="priority-container"><p>Priority:</p>
-            <button class="priority1 priority-btn">High</button>
-            <button class="priority2 priority-btn">Normal</button>
-            <button class="priority3 priority-btn">Low</button>
+            <!-- <input name="high-priority" id="high-priority" type="checkbox" class="priority-checkbox">
+            <label for="high-priority">High</label>
+        
+            <input name="medium-priority" id="medium-priority" type="checkbox" class="priority-checkbox">
+            <label for="medium-priority">Medium</label>
+
+            <input name="low-priority" id="low-priority" type="checkbox" class="priority-checkbox">
+            <label for="low-priority">Low</label> -->
+              <button class="priority-btn" id="high">High</button>
+              <button class="priority-btn" id="medium">Medium</button>
+              <button class="priority-btn" id="low">Low</button>
+
           </div>
           <div>
             <!-- <label for="description">Description:</label> -->
-            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description for the to-do item.</textarea>
+            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description.</textarea>
 
           </div>
           <div class="error-msg-container"> </div>

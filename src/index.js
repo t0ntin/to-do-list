@@ -8,8 +8,7 @@ import './style.css';
 
 
 const mainTodoObj = [];
-
-
+// let priority = getPriority();
 
 class Todo {
   constructor(todo, dueDate, priority, description) {
@@ -25,34 +24,48 @@ function addTodo (todo, dueDate, priority, description) {
   mainTodoObj.push(newToDo);
 }
 
-function handleSubmitToMain () {
-  let priority = 'testing';
-  const createTodoBtn = document.querySelector('#create-todo-btn');
-  createTodoBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const todo = document.querySelector('#to-do').value;
-    const dueDate = document.querySelector('#date').value;
-    const description = document.querySelector('#description').value;
 
-    addTodo(todo, dueDate, priority, description);
-    console.log(mainTodoObj);
+function handleSubmitToMain () {
+  let priority = '';
+  const todo = document.querySelector('#to-do').value;
+  const dueDate = document.querySelector('#date');
+  const description = document.querySelector('#description').value;
+  const priorityContainer = document.querySelector('.priority-container');
+  const createTodoButton = document.querySelector("#create-todo-btn");
+
+  priorityContainer.addEventListener('click', function (e){
+    e.preventDefault();
+    if (e.target.getAttribute('id') === 'high' ) {
+      priority = 'High';
+    }
+    if (e.target.getAttribute('id') === 'medium' ) {
+      priority = 'medium';
+    }
+        if (e.target.getAttribute('id') === 'low' ) {
+      priority = 'low';
+    }
+
+  }) 
+  createTodoButton.addEventListener('click', function createTodo(e) {
+    e.preventDefault();
+    addTodo(todo, dueDate.value, priority, description);
   });
 }
 
-handleSubmitToMain();
 
 
 
-//PREPOPULATES FIELDS
+//PREPOPULATES DATE FIELDS
 document.addEventListener('DOMContentLoaded', function() {
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, '0');
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const yyyy = today.getFullYear();
-
+  
   const formattedToday = `${yyyy}-${mm}-${dd}`;
   document.getElementById('date').value = formattedToday;
 });
 
+handleSubmitToMain();
 console.log(mainTodoObj);
 console.log('testing');

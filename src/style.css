@@ -5,28 +5,39 @@
   list-style: none;
 }
 
-*::before, *::after {
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 :root {
   --BACKGROUND-COLOR: rgba(0, 0, 0, 0.92);
-  --SECONDARY-BG-COLOR:#262837;
+  --SECONDARY-BG-COLOR: #262837;
   --PLACEHOLDER-COLOR: rgb(155, 155, 155);
-  --HIGH-PRIORITY: #FF5B22;
-  --HIGH-PRIORITY: #FF5B22;
-  --HIGH-PRIORITY: #FF5B22;
+  --TEXT-COLOR: white;
+  --HIGH-PRIORITY: #ff5b22;
+  --HIGH-PRIORITY: #ff5b22;
+  --HIGH-PRIORITY: #ff5b22;
 }
 
 body {
   color: white;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
@@ -35,7 +46,6 @@ img {
   max-width: 100%;
   height: auto;
 }
-
 
 /* @font-face {
   font-family: 'MyFont';
@@ -55,7 +65,6 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 .title-container {
   border: 1px solid rgb(255, 255, 255);
@@ -64,7 +73,6 @@ img {
 }
 
 .title {
-
 }
 
 .bottom-controls {
@@ -75,13 +83,10 @@ img {
   bottom: 0;
 }
 
-
-
 .modal {
   position: absolute;
   bottom: 100px;
   /* background-color: red; */
-  
 }
 
 form {
@@ -101,7 +106,7 @@ input {
   background-color: var(--SECONDARY-BG-COLOR);
   border-radius: 12px;
   border: 0;
-  color: white;
+  color: var(--TEXT-COLOR);
   outline: none;
   padding: 8px 20px 8px;
   width: 100%;
@@ -119,47 +124,84 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--PLACEHOLDER-COLOR);
 }
+
+input[type="checkbox"] {
+  margin: 10px 0px;
+  width: 40px;
+  transform: scale(2);
+  cursor: pointer;
+}
+
+.priority-checkbox {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+
+/* .priority-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+} */
 
 .priority-container {
   display: flex;
   margin: 3px 0 15px 0;
   justify-content: space-evenly;
-
-
 }
 
-.priority-btn {
-  display: inline-block;
-  margin-left: 7px;
-  border-radius: 5px;
-  border: none;
-  padding: 10px;
-  font-weight: bold;
+.priority-checkbox + label {
+  position: relative;
+  font-size: 14px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  color: var(--TEXT-COLOR);
 }
-
-.priority1 {
-  /* background-color: #FE0000; */
-  background-color: #FF5B22;
-  color: #000000;
+.priority-checkbox + label::before {
+  content: " ";
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 3px;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(204, 204, 204);
+  border-radius: 2px;
+  box-shadow: none;
 }
-
-.priority2 {
-  /* background-color: #F11A7B; */
-  background-color: #FF9130;
-  color: #000;
+.priority-checkbox:checked + label::after {
+  content: " ";
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48cGF0aCBmaWxsPSIjMDA2YmVkIiBkPSJNMCA5NkMwIDYwLjY1IDI4LjY1IDMyIDY0IDMySDM4NEM0MTkuMyAzMiA0NDggNjAuNjUgNDQ4IDk2VjQxNkM0NDggNDUxLjMgNDE5LjMgNDgwIDM4NCA0ODBINjRDMjguNjUgNDgwIDAgNDUxLjMgMCA0MTZWOTZ6Ii8+PC9zdmc+");
+  background-repeat: no-repeat;
+  background-size: 14px 14px;
+  background-position: center center;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+  left: 2px;
+  top: 0px;
+  text-align: center;
+  background-color: transparent;
+  font-size: 10px;
+  height: 20px;
+  width: 20px;
+  transform: scale(1.5);
 }
-
-.priority3 {
-  /* background-color: #D71313; */
-  background-color: #FECDA6;
-  color: #000;
-}
-
-
 
 /* textarea field */
 #description {
@@ -172,9 +214,7 @@ input::placeholder, textarea::placeholder {
   border: 0;
   border-radius: 5px;
   padding: 8px 20px 8px;
-
 }
-
 
 .error-msg-container {
   height: 1rem;
@@ -183,8 +223,6 @@ input::placeholder, textarea::placeholder {
   font-size: 0.7rem;
   font-weight: bold;
 }
-
-
 
 .create-btn-container {
   display: flex;
@@ -201,4 +239,8 @@ input::placeholder, textarea::placeholder {
   color: rgb(255, 255, 255);
   font-weight: bold;
   cursor: pointer;
+}
+
+#create-todo-btn:active {
+  opacity: .8;
 }
