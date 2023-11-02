@@ -244,3 +244,15 @@ input[type="checkbox"] {
 #create-todo-btn:active {
   opacity: .8;
 }
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid white;
+  width: auto;
+  height: auto;
+}
+.todo-item li {
+  border: 1px solid white;
+
+}
