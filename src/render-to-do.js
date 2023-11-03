@@ -14,6 +14,7 @@ export function renderTodos() {
     <li class="todo-date">${todo.dueDate}</li>
     <li class="todo-priority">${todo.priority}</li>
     <li class="todo-delete">Delete</li>
+    <li class="todo-select">Select</li>
   </ul>`
 
   }
