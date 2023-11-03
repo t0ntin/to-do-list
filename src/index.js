@@ -1,5 +1,6 @@
 import './style.css';
-import { renderTodos } from './render-to-do';
+import { getPriority, prepopulateDate } from './logic';
+
 // import Icon from './hamburger.jpg';
 
 // const title = document.querySelector('.title');
@@ -29,7 +30,10 @@ function addTodo (todo, dueDate, priority, description) {
   mainTodoObj.push(newToDo);
 }
 
-function handleSubmitToMain () {
+
+
+
+function submitToTodoContainer () {
   let priority = getPriority();
   const todo = document.querySelector('#to-do');
   const dueDate = document.querySelector('#date');
@@ -38,7 +42,7 @@ function handleSubmitToMain () {
   const createTodoButton = document.querySelector("#create-todo-btn");
 
   priorityContainer.addEventListener('click',  (e) =>  {
-    priority = getPriority(e); // Pass the event object to getPriority
+    priority = getPriority(e);
   });
 
   createTodoButton.addEventListener('click', (e)=> {
@@ -49,36 +53,49 @@ function handleSubmitToMain () {
   });
 }
 
-// Was getting an error here when I was just using e.preventdefault(); I also had to add (e) to getpriority and to the event listener function: The error is due to calling preventDefault() on the event object even before ensuring its existence. Since not all events come with a preventDefault method, you should check if it exists before calling it.
-function getPriority(e) {
-  if (e) {
-    e.preventDefault();
-  let priority = '';
-  if (e.target.getAttribute('id') === 'high' ) {
-    priority = 'High';
+function renderTodos() {
+  const todoContainer = document.querySelector('.todo-container');
+  todoContainer.innerHTML = '';
+  for (const todo of mainTodoObj) {
+    const todoUl = document.createElement('ul');
+    todoUl.classList.add('todo-item');
+    todoUl.innerHTML = `
+      <li class="todo-title" contenteditable="true">${todo.todo}</li>
+      <li class="todo-description" contenteditable="true">${todo.description}</li>
+      <li class="todo-date">${todo.dueDate}</li>
+      <li class="todo-priority">${todo.priority}</li>
+      <li class="todo-delete">Delete</li>
+      <li class="todo-select">Select</li>
+      <li class="todo-done">Done</li>
+    `;
+    const deleteButton = createDeleteButton(todo, todoUl);
+    todoUl.querySelector('.todo-delete').appendChild(deleteButton);
+    todoUl.setAttribute('id', mainTodoObj.indexOf(todo));
+    todoContainer.append(todoUl);
   }
-  if (e.target.getAttribute('id') === 'medium' ) {
-    priority = 'medium';
-  }
-  if (e.target.getAttribute('id') === 'low' ) {
-    priority = 'low';
-  }
-  return priority;
-} 
-return '';
+  return todoContainer;
 }
 
-//PREPOPULATES DATE FIELDS
-document.addEventListener('DOMContentLoaded', function() {
-  const today = new Date();
-  const dd = String(today.getDate()).padStart(2, '0');
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const yyyy = today.getFullYear();
-  
-  const formattedToday = `${yyyy}-${mm}-${dd}`;
-  document.getElementById('date').value = formattedToday;
-});
+function createDeleteButton(todo, todoUl) {
+  const deleteButton = document.createElement('button');
+  deleteButton.innerText = 'Delete';
+  deleteButton.addEventListener('click', () => {
+      deleteTodo(todo);
+      todoUl.remove();
+    });
+  return deleteButton;
+}
 
-handleSubmitToMain();
+function deleteTodo(todo) {
+  const index = mainTodoObj.indexOf(todo);
+  if (index > -1) {
+    // "1" specifies the number of elements to be removed.
+    mainTodoObj.splice(index, 1);
+    console.log(mainTodoObj);
+  }
+}
+
+
+prepopulateDate();
+submitToTodoContainer();
 console.log(mainTodoObj);
-console.log('testing');
