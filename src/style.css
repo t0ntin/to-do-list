@@ -246,18 +246,21 @@ input[type="checkbox"] {
   opacity: .8;
 }
 
+.todo-container {
+
+}
+
 .todo-item {
   /* display: flex;
   justify-content: space-between; */
   border: 1px solid white;
   width: 390px;
-  max-height: 100px;
+  height: 105px;
   margin: 5px 3px 5px 3px;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: minmax(auto, 100px) minmax(auto, 100px) 26px;
+  grid-template-rows: minmax(auto, auto) minmax(auto, 26px) 26px;
   gap: 2px;
-  /* row-gap: 100px; */
   
 }
 
@@ -266,7 +269,7 @@ input[type="checkbox"] {
   padding: 3px;
 }
 
-ul li:nth-child(1) {
+.todo-title {
   overflow: auto;
   background-color: gray;
   grid-column:1/4 ;
@@ -274,15 +277,15 @@ ul li:nth-child(1) {
   
 }
 
-ul li:nth-child(2) {
+.todo-description {
   overflow: auto;
-  background-color: gray;
+  background-color: rgb(192, 190, 190);
   grid-column:1/4 ;
   grid-row: 2/3;
   
 }
 
-ul li:nth-child(3) {
+.todo-date {
   background-color: red;
   grid-column:1/2 ;
   grid-row: 3/4;
@@ -290,10 +293,15 @@ ul li:nth-child(3) {
   
 }
 
-
-ul li:nth-child(4) {
-  /* background-color: red; */
+.todo-priority {
   grid-column:3/4 ;
   grid-row: 3/4;
+  text-align: center;
+  
+}
+.todo-delete {
+  /* grid-column:3/4 ;
+  grid-row: 3/4; */
+  text-align: center;
   
 }
