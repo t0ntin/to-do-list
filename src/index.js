@@ -8,6 +8,11 @@ import { renderTodos } from './render-to-do';
 // title.append(myIcon);
 
 
+// export const mainTodoObj = [{
+//   description : "This is the description of what I have to do.",
+//   dueDate:  "2023-11-02",
+//   priority : "High",
+//   todo:  "This is what I have to do."}];
 export const mainTodoObj = [];
 
 class Todo {

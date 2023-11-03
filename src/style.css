@@ -22,6 +22,7 @@
 
 body {
   color: white;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 input,
@@ -66,7 +67,7 @@ img {
   flex-direction: column;
   align-items: center;
 }
-.title-container {
+.page-title-container {
   border: 1px solid rgb(255, 255, 255);
   display: flex;
   justify-content: center;
@@ -246,13 +247,46 @@ input[type="checkbox"] {
 }
 
 .todo-item {
-  display: flex;
-  justify-content: space-between;
+  /* display: flex;
+  justify-content: space-between; */
   border: 1px solid white;
   width: auto;
-  height: auto;
+  max-height: 80px;
+  margin: 5px 3px 5px 3px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: minmax(auto, 100px) 26px;
+  gap: 2px;
+  /* row-gap: 100px; */
+  
 }
+
 .todo-item li {
   border: 1px solid white;
+  padding: 3px;
+}
 
+ul li:nth-child(2) {
+  overflow: auto;
+
+  background-color: gray;
+  grid-column:2/4 ;
+  grid-row: 1/2;
+  
+}
+
+ul li:nth-child(3) {
+  background-color: red;
+  grid-column:1/2 ;
+  grid-row: 2/3;
+  text-align: center;
+  
+}
+
+
+ul li:nth-child(4) {
+  /* background-color: red; */
+  grid-column:3/4 ;
+  grid-row: 2/3;
+  
 }

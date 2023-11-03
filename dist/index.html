@@ -7,18 +7,19 @@
 <script defer src="bundle.js"></script></head>
 <body>
   <main class="main">
-    <section class="title-container">
+    <section class="page-title-container">
       <h1 class="title">
         To-do App
       </h1> 
     </section> .main
+    <!-- <ul class="todo-heading-ul">
+      <li class="todo-heading"></li>
+      <li class="date-heading"></li>
+      <li class="priority-heading"></li>
+      <li class="description-heading"></li>
+    </ul> -->
 
-    <!-- <section class="todo-item">
-      <li class="todo-title"></li>
-      <li class="todo-date"></li>
-      <li class="todo-priority"></li>
-      <li class="todo-description"></li>
-    </section> -->
+
 
     <div class="modal" id="modal">
       <fieldset>.modal > fieldset
@@ -32,7 +33,7 @@
   
           <div>
             <!-- <label for="date">Due date:</label> -->
-            <input type="date" id="date" name="date" required minlength="10" maxlength="10" />
+            <input type="date" id="date" name="date" minlength="10" maxlength="10" />
           </div>
 
           <div class="priority-container"><p>Priority:</p>
