@@ -45,6 +45,7 @@ function handleSubmitToMain () {
   e.preventDefault();
     addTodo(todo.value, dueDate.value, priority, description.value);
     renderTodos();
+    console.log(mainTodoObj);
   });
 }
 

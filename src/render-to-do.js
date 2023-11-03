@@ -5,7 +5,7 @@ import { mainTodoObj } from ".";
 
 export function renderTodos() {
   const main = document.querySelector('.main');
-  // main.innerHTML = '';
+  main.innerHTML = '';
   for (const todo of mainTodoObj) {
     main.innerHTML += `    
     <ul class="todo-item">
