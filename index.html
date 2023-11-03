@@ -21,54 +21,55 @@
 
 
 
-    <div class="modal" id="modal">
-      <fieldset>.modal > fieldset
-        <button data-close-button class="close-button">&times;</button>
-        <form action="" id="form">form
-          <legend>To-do info:</legend>
-          <div>
-            <!-- <label for="to-do">To-do item:</label> -->
-            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="60" placeholder="Enter your to-do" value="This is what I have to do."/>
-          </div>
-  
-          <div>
-            <!-- <label for="date">Due date:</label> -->
-            <input type="date" id="date" name="date" minlength="10" maxlength="10" />
-          </div>
-
-          <div class="priority-container"><p>Priority:</p>
-            <!-- <input name="high-priority" id="high-priority" type="checkbox" class="priority-checkbox">
-            <label for="high-priority">High</label>
-        
-            <input name="medium-priority" id="medium-priority" type="checkbox" class="priority-checkbox">
-            <label for="medium-priority">Medium</label>
-
-            <input name="low-priority" id="low-priority" type="checkbox" class="priority-checkbox">
-            <label for="low-priority">Low</label> -->
-              <button class="priority-btn" id="high">High</button>
-              <button class="priority-btn" id="medium">Medium</button>
-              <button class="priority-btn" id="low">Low</button>
-
-          </div>
-          <div>
-            <!-- <label for="description">Description:</label> -->
-            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description of what I have to do.</textarea>
-
-          </div>
-          <div class="error-msg-container"> </div>
-          <div class="create-btn-container">
-            <button type="submit" id="create-todo-btn">
-              Create to-do
-            </button>
-          </div>
-        </form>
-      </fieldset>
-    </div>
+    
     <div id="overlay"></div>
     <section class="bottom-controls">
       .bottom-controls
+      
     </section>
   </main>
-  
+  <div class="modal" id="modal">
+    <fieldset>.modal > fieldset
+      <button data-close-button class="close-button">&times;</button>
+      <form action="" id="form">form
+        <legend>To-do info:</legend>
+        <div>
+          <!-- <label for="to-do">To-do item:</label> -->
+          <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="60" placeholder="Enter your to-do" value="This is what I have to do."/>
+        </div>
+
+        <div>
+          <!-- <label for="date">Due date:</label> -->
+          <input type="date" id="date" name="date" minlength="10" maxlength="10" />
+        </div>
+
+        <div class="priority-container"><p>Priority:</p>
+          <!-- <input name="high-priority" id="high-priority" type="checkbox" class="priority-checkbox">
+          <label for="high-priority">High</label>
+      
+          <input name="medium-priority" id="medium-priority" type="checkbox" class="priority-checkbox">
+          <label for="medium-priority">Medium</label>
+
+          <input name="low-priority" id="low-priority" type="checkbox" class="priority-checkbox">
+          <label for="low-priority">Low</label> -->
+            <button class="priority-btn" id="high">High</button>
+            <button class="priority-btn" id="medium">Medium</button>
+            <button class="priority-btn" id="low">Low</button>
+
+        </div>
+        <div>
+          <!-- <label for="description">Description:</label> -->
+          <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description of what I have to do.</textarea>
+
+        </div>
+        <div class="error-msg-container"> </div>
+        <div class="create-btn-container">
+          <button type="submit" id="create-todo-btn">
+            Create to-do
+          </button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
 </body>
 </html>
