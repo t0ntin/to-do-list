@@ -1,5 +1,5 @@
 import './style.css';
-import { getPriority, prepopulateDate } from './logic';
+import { getPriority, prepopulateDate, deleteTodo, priorityToggler } from './logic';
 
 // import Icon from './hamburger.jpg';
 
@@ -38,8 +38,10 @@ function submitToTodoContainer () {
   const todo = document.querySelector('#to-do');
   const dueDate = document.querySelector('#date');
   const description = document.querySelector('#description');
+  // priorityContainer IS INSIDE THE MODAL, NOT INSIDE THE TODOS.
   const priorityContainer = document.querySelector('.priority-container');
   const createTodoButton = document.querySelector("#create-todo-btn");
+  const todoContainer = document.querySelector('.todo-container');
 
   priorityContainer.addEventListener('click',  (e) =>  {
     priority = getPriority(e);
@@ -48,7 +50,8 @@ function submitToTodoContainer () {
   createTodoButton.addEventListener('click', (e)=> {
   e.preventDefault();
     addTodo(todo.value, dueDate.value, priority, description.value);
-    renderTodos();
+    renderTodos(todoContainer);
+    togglePriority(todoContainer);
     console.log(mainTodoObj);
   });
 }
@@ -64,16 +67,16 @@ function renderTodos() {
       <li class="todo-description" contenteditable="true">${todo.description}</li>
       <li class="todo-date">${todo.dueDate}</li>
       <li class="todo-priority">${todo.priority}</li>
-      <li class="todo-delete">Delete</li>
+      <li class="todo-delete"></li>
       <li class="todo-select">Select</li>
       <li class="todo-done">Done</li>
     `;
+    setPriorityStyles(todo, todoUl);
     const deleteButton = createDeleteButton(todo, todoUl);
     todoUl.querySelector('.todo-delete').appendChild(deleteButton);
     todoUl.setAttribute('id', mainTodoObj.indexOf(todo));
     todoContainer.append(todoUl);
   }
-  return todoContainer;
 }
 
 function createDeleteButton(todo, todoUl) {
@@ -86,15 +89,25 @@ function createDeleteButton(todo, todoUl) {
   return deleteButton;
 }
 
-function deleteTodo(todo) {
-  const index = mainTodoObj.indexOf(todo);
-  if (index > -1) {
-    // "1" specifies the number of elements to be removed.
-    mainTodoObj.splice(index, 1);
-    console.log(mainTodoObj);
-  }
+function togglePriority(todoContainer) {
+  todoContainer.addEventListener('click', (e) => {
+    priorityToggler(e);
+  });
 }
 
+// INSIDE renderTodos();
+function setPriorityStyles(todo, todoUl) {
+  const priorityEl = todoUl.querySelector('.todo-priority');
+  if (todo.priority === 'High') {
+    priorityEl.classList.add('todo-priority-high');
+  }
+  if (todo.priority === 'Medium') {
+    priorityEl.classList.add('todo-priority-medium');
+  }
+  if (todo.priority === 'Low') {
+    priorityEl.classList.add('todo-priority-low');
+  }
+}
 
 prepopulateDate();
 submitToTodoContainer();

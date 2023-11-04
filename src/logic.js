@@ -23,15 +23,62 @@ export function getPriority(e) {
     e.preventDefault();
   let priority = '';
   if (e.target.getAttribute('id') === 'high' ) {
-    priority = 'High';
+    priority = 'High';    
   }
   if (e.target.getAttribute('id') === 'medium' ) {
-    priority = 'medium';
+    priority = 'Medium';
   }
   if (e.target.getAttribute('id') === 'low' ) {
-    priority = 'low';
+    priority = 'Low';
   }
   return priority;
 } 
 return '';
+}
+
+export function deleteTodo(todo) {
+  const index = mainTodoObj.indexOf(todo);
+  if (index > -1) {
+    // "1" specifies the number of elements to be removed.
+    mainTodoObj.splice(index, 1);
+    console.log(mainTodoObj);
+  }
+}
+
+// export function priorityToggler(e) {
+//   if (e.target.classList.contains('todo-priority')) {
+//   const priorityEl = e.target;
+//   if (priorityEl.textContent === 'High') {
+//     priorityEl.textContent = 'Medium';
+//     priorityEl.classList.add('todo-priority-medium');
+//   } else if (priorityEl.textContent === 'Medium') {
+//     priorityEl.textContent = 'Low';
+//     priorityEl.classList.add('todo-priority-low');
+//   } else if (priorityEl.textContent === 'Low') {
+//     priorityEl.textContent = 'High';
+//     priorityEl.classList.add('todo-priority-high');
+//   }
+//     // priorityEl.style.backgroundColor = ''; 
+
+// }
+// }
+
+export function priorityToggler(e) {
+  if (e.target.classList.contains('todo-priority')) {
+    const priorityEl = e.target;
+
+    if (priorityEl.textContent === 'High') {
+      priorityEl.textContent = 'Medium';
+      priorityEl.classList.remove('todo-priority-high');
+      priorityEl.classList.add('todo-priority-medium');
+    } else if (priorityEl.textContent === 'Medium') {
+      priorityEl.textContent = 'Low';
+      priorityEl.classList.remove('todo-priority-medium');
+      priorityEl.classList.add('todo-priority-low');
+    } else if (priorityEl.textContent === 'Low') {
+      priorityEl.textContent = 'High';
+      priorityEl.classList.remove('todo-priority-low');
+      priorityEl.classList.add('todo-priority-high');
+    }
+  }
 }

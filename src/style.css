@@ -296,7 +296,19 @@ input[type="checkbox"] {
   grid-column: 4/5;
   grid-row: 3/4;
   text-align: center;
-  
+}
+
+.todo-priority-high {
+  background-color: red; 
+}
+
+.todo-priority-medium {
+  background-color: yellow; 
+  color: black;
+}
+
+.todo-priority-low {
+  background-color: green; 
 }
 
 .todo-delete {
