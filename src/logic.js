@@ -1,20 +1,26 @@
 
-
 import { mainTodoObj } from ".";
-
+import {format} from 'date-fns';
 
 
 //PREPOPULATES DATE FIELDS
 export function prepopulateDate() {
   document.addEventListener('DOMContentLoaded', function() {
     const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
+    // const dd = String(today.getDate()).padStart(2, '0');
+    // const mm = String(today.getMonth() + 1).padStart(2, '0');
+    // const yyyy = today.getFullYear();
     
-    const formattedToday = `${yyyy}-${mm}-${dd}`;
-    document.getElementById('date').value = formattedToday;
+    // const formattedToday = `${yyyy}-${mm}-${dd}`;
+    // document.getElementById('date').value = formattedToday;
+    const dateFormatted = format(today, "yyy-MM-dd");
+    document.getElementById('date').value = dateFormatted;
   });
+} 
+export function formatTodoDate(dateString) {
+  const date = new Date(dateString);
+  const formattedDate = format(date, 'MMM d');
+  return formattedDate;
 }
 
 // Was getting an error here when I was just using e.preventdefault(); I also had to add (e) to getpriority and to the event listener function: The error is due to calling preventDefault() on the event object even before ensuring its existence. Since not all events come with a preventDefault method, you should check if it exists before calling it.

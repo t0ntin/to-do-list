@@ -1,5 +1,5 @@
 import './style.css';
-import { getPriority, prepopulateDate, deleteTodo, priorityToggler } from './logic';
+import { getPriority, formatTodoDate, prepopulateDate, deleteTodo, priorityToggler } from './logic';
 
 // import Icon from './hamburger.jpg';
 
@@ -62,10 +62,11 @@ function renderTodos() {
   for (const todo of mainTodoObj) {
     const todoUl = document.createElement('ul');
     todoUl.classList.add('todo-item');
+    const formattedDate = formatTodoDate(todo.dueDate);
     todoUl.innerHTML = `
       <li class="todo-title" contenteditable="true">${todo.todo}</li>
       <li class="todo-description" contenteditable="true">${todo.description}</li>
-      <li class="todo-date">${todo.dueDate}</li>
+      <li class="todo-date">${formattedDate}</li>
       <li class="todo-priority">${todo.priority}</li>
       <li class="todo-delete"></li>
       <li class="todo-select">Select</li>
