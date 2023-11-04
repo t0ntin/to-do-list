@@ -66,7 +66,6 @@ export function deleteTodo(todo) {
 export function priorityToggler(e) {
   if (e.target.classList.contains('todo-priority')) {
     const priorityEl = e.target;
-
     if (priorityEl.textContent === 'High') {
       priorityEl.textContent = 'Medium';
       priorityEl.classList.remove('todo-priority-high');

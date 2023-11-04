@@ -22,6 +22,7 @@ class Todo {
     this.dueDate = dueDate;
     this.priority = priority;
     this.description = description;
+    this.isDone = false;
   }
 }
 
@@ -29,9 +30,6 @@ function addTodo (todo, dueDate, priority, description) {
   const newToDo = new Todo (todo, dueDate, priority, description);
   mainTodoObj.push(newToDo);
 }
-
-
-
 
 function submitToTodoContainer () {
   let priority = getPriority();
@@ -52,6 +50,8 @@ function submitToTodoContainer () {
     addTodo(todo.value, dueDate.value, priority, description.value);
     renderTodos(todoContainer);
     togglePriority(todoContainer);
+    setupEventListenerForMarkAsDone(mainTodoObj);
+
     console.log(mainTodoObj);
   });
 }
@@ -89,15 +89,13 @@ function createDeleteButton(todo, todoUl) {
   return deleteButton;
 }
 
-function togglePriority(todoContainer) {
-  todoContainer.addEventListener('click', (e) => {
-    priorityToggler(e);
-  });
-}
-
 // INSIDE renderTodos();
 function setPriorityStyles(todo, todoUl) {
   const priorityEl = todoUl.querySelector('.todo-priority');
+  if (priorityEl.textContent == '') {
+      priorityEl.textContent = 'Low';
+      priorityEl.classList.add('todo-priority-low');
+  }
   if (todo.priority === 'High') {
     priorityEl.classList.add('todo-priority-high');
   }
@@ -108,6 +106,81 @@ function setPriorityStyles(todo, todoUl) {
     priorityEl.classList.add('todo-priority-low');
   }
 }
+
+function togglePriority(todoContainer) {
+  todoContainer.addEventListener('click', (e) => {
+    if (e.target.matches('.todo-priority')) {
+      priorityToggler(e);
+    }
+  });
+}
+
+
+function setupEventListenerForMarkAsDone (mainTodoObj) {
+  const todoItems = document.querySelectorAll('.todo-item');
+
+  todoItems.forEach((item, index) => {
+    const todoDoneButton = item.querySelector('.todo-done');
+
+    todoDoneButton.addEventListener('click', (e) => {
+      markAsDone(e, mainTodoObj[index]);
+    });
+  });
+}
+
+function markAsDone(e, currentTodo) {
+  const todoUl = e.target.closest('.todo-item');
+  const descriptionLi = todoUl.querySelector('.todo-description');
+  const todoTitleLi = todoUl.querySelector('.todo-title');
+  
+  if (e.target.classList.contains('todo-done')) {
+    if (!currentTodo.isDone) {
+      descriptionLi.style.textDecoration = 'line-through';
+      todoTitleLi.style.textDecoration = 'line-through';
+      currentTodo.isDone = true;
+      console.log(currentTodo.isDone);
+    } else {
+      descriptionLi.style.textDecoration = 'none';
+      todoTitleLi.style.textDecoration = 'none'; 
+      currentTodo.isDone = false;
+      console.log(currentTodo.isDone);
+    }
+  }
+}
+
+// function setUpEventListeners(mainTodoObj) {
+//   const todoItems = document.querySelectorAll('.todo-item');
+
+//   todoItems.forEach((item, index) => {
+//     const todoDoneButton = item.querySelector('.todo-done');
+
+//     todoDoneButton.addEventListener('click', (e) => {
+//       markAsDone(e, mainTodoObj[index]);
+//     });
+//   });
+// }
+
+// function markAsDone(e, currentTodo) {
+//   const todoUl = e.target.closest('.todo-item');
+//   const descriptionLi = todoUl.querySelector('.todo-description');
+//   const todoTitleLi = todoUl.querySelector('.todo-title');
+  
+//   if (e.target.classList.contains('todo-done')) {
+//     if (!currentTodo.isDone) {
+//       descriptionLi.style.textDecoration = 'line-through';
+//       todoTitleLi.style.textDecoration = 'line-through';
+//       currentTodo.isDone = true;
+//       console.log(currentTodo.isDone);
+//     } else {
+//       descriptionLi.style.textDecoration = 'none';
+//       todoTitleLi.style.textDecoration = 'none'; 
+//       currentTodo.isDone = false;
+//       console.log(currentTodo.isDone);
+//     }
+//   }
+// }
+
+
 
 prepopulateDate();
 submitToTodoContainer();

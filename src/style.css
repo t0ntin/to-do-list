@@ -284,6 +284,10 @@ input[type="checkbox"] {
   
 }
 
+.strike-through {
+  text-decoration: line-through;
+}
+
 .todo-date {
   background-color: red;
   grid-column: 3/4;
