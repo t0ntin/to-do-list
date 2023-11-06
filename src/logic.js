@@ -50,8 +50,6 @@ export function getPriority(e) {
   if (e.target.getAttribute('id') === 'low' ) {
     priority = 'Low';
   }
-  console.log(priority);
-  console.log({ priority });
   return {priority};
 } 
 return '';
