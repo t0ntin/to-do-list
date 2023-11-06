@@ -1,5 +1,6 @@
 import './style.css';
 import { getPriority, formatTodoDate, prepopulateDate, deleteTodo, priorityToggler } from './logic';
+import { isFirstDayOfMonth } from 'date-fns';
 
 // import Icon from './hamburger.jpg';
 
@@ -9,14 +10,38 @@ import { getPriority, formatTodoDate, prepopulateDate, deleteTodo, priorityToggl
 // title.append(myIcon);
 
 
-// export const mainTodoObj = [{
-//   description : "This is the description of what I have to do.",
-//   dueDate:  "2023-11-02",
-//   priority : "High",
-//   todo:  "This is what I have to do."}];
-export const mainTodoObj = [];
+function myPage() {
+  const projectInput = document.querySelector('#project-input');
+  const todoInput = document.querySelector('#to-do');
+  const dueDateInput = document.querySelector('#date');
+  const descriptionInput = document.querySelector('#description');
+  // priorityContainer IS INSIDE THE MODAL, NOT INSIDE THE TODOS.
+  const priorityContainer = document.querySelector('.priority-container');
+  const createTodoButton = document.querySelector("#create-todo-btn");
+  const todoContainer = document.querySelector('.todo-container');
+  
+  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer};
+}
+const page = myPage();
 
-class Todo {
+const projectList = {};
+const projectArray = [];
+export const mainTodoArray = [];
+
+class Project {
+  constructor(name) {
+      this.name = name;
+      this.projectItems = [];
+  }
+  addItem(toDoItem) {
+      this.projectItems.push(toDoItem);
+  }
+  removeItem(toDoItem) {
+      this.projectItems.splice(this.projectItems.indexOf(toDoItem), 1);
+  }
+}
+
+export class Todo {
   constructor(todo, dueDate, priority, description) {
     this.todo = todo;
     this.dueDate = dueDate;
@@ -26,40 +51,59 @@ class Todo {
   }
 }
 
-function addTodo (todo, dueDate, priority, description) {
-  const newToDo = new Todo (todo, dueDate, priority, description);
-  mainTodoObj.push(newToDo);
+function pushToMainTodoArray (todo, dueDate, priority, description) {
+    const newToDo = new Todo (todo, dueDate, priority, description);
+    mainTodoArray.push(newToDo);
 }
 
+function pushToProjectArray (name, projectItem) {
+  const newProject = new Project (name);
+  newProject.addItem(projectItem);
+  console.log(newProject);
+}
+
+
+
+function determineProject(priority) {
+  // let priority = getPriority().priority;
+  console.log(priority);
+  if  (page.projectInput.value.trim() === '') {
+    pushToMainTodoArray(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
+  } else {
+    const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
+    pushToProjectArray(page.projectInput.value, newToDo);
+  }
+}
+
+// function addToProjectList(project) {
+//   projectList[project.name] = project;
+//   projectArray.push(project);
+// }
+
+
+
 function submitToTodoContainer () {
-  let priority = getPriority();
-  const todo = document.querySelector('#to-do');
-  const dueDate = document.querySelector('#date');
-  const description = document.querySelector('#description');
-  // priorityContainer IS INSIDE THE MODAL, NOT INSIDE THE TODOS.
-  const priorityContainer = document.querySelector('.priority-container');
-  const createTodoButton = document.querySelector("#create-todo-btn");
-  const todoContainer = document.querySelector('.todo-container');
-
-  priorityContainer.addEventListener('click',  (e) =>  {
-    priority = getPriority(e);
+  let priority = getPriority.priority;
+  console.log(priority);
+  page.priorityContainer.addEventListener('click',  (e) =>  {
+    priority = getPriority(e).priority;
+    console.log(priority);
   });
-
-  createTodoButton.addEventListener('click', (e)=> {
+  page.createTodoButton.addEventListener('click', (e)=> {
   e.preventDefault();
-    addTodo(todo.value, dueDate.value, priority, description.value);
-    renderTodos(todoContainer);
-    togglePriority(todoContainer);
-    setupEventListenerForMarkAsDone(mainTodoObj);
-
-    console.log(mainTodoObj);
+    // pushToMainTodoArray(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
+    determineProject(priority);
+    renderTodos(page.todoContainer);
+    togglePriority(page.todoContainer);
+    setupEventListenerForMarkAsDone(mainTodoArray);
+    console.log(mainTodoArray);
   });
 }
 
 function renderTodos() {
-  const todoContainer = document.querySelector('.todo-container');
-  todoContainer.innerHTML = '';
-  for (const todo of mainTodoObj) {
+  // const todoContainer = document.querySelector('.todo-container');
+  page.todoContainer.innerHTML = '';
+  for (const todo of mainTodoArray) {
     const todoUl = document.createElement('ul');
     todoUl.classList.add('todo-item');
     const formattedDate = formatTodoDate(todo.dueDate);
@@ -75,8 +119,8 @@ function renderTodos() {
     setPriorityStyles(todo, todoUl);
     const deleteButton = createDeleteButton(todo, todoUl);
     todoUl.querySelector('.todo-delete').appendChild(deleteButton);
-    todoUl.setAttribute('id', mainTodoObj.indexOf(todo));
-    todoContainer.append(todoUl);
+    todoUl.setAttribute('id', mainTodoArray.indexOf(todo));
+    page.todoContainer.append(todoUl);
   }
 }
 
@@ -117,18 +161,18 @@ function togglePriority(todoContainer) {
 }
 
 
-function setupEventListenerForMarkAsDone (mainTodoObj) {
+function setupEventListenerForMarkAsDone (mainTodoArray) {
   const todoItems = document.querySelectorAll('.todo-item');
 
   todoItems.forEach((item, index) => {
     const todoDoneButton = item.querySelector('.todo-done');
 
     todoDoneButton.addEventListener('click', (e) => {
-      markAsDone(e, mainTodoObj[index]);
+      markAsDone(e, mainTodoArray[index]);
     });
   });
 }
-
+ 
 function markAsDone(e, currentTodo) {
   const todoUl = e.target.closest('.todo-item');
   const descriptionLi = todoUl.querySelector('.todo-description');
@@ -149,40 +193,8 @@ function markAsDone(e, currentTodo) {
   }
 }
 
-// function setUpEventListeners(mainTodoObj) {
-//   const todoItems = document.querySelectorAll('.todo-item');
-
-//   todoItems.forEach((item, index) => {
-//     const todoDoneButton = item.querySelector('.todo-done');
-
-//     todoDoneButton.addEventListener('click', (e) => {
-//       markAsDone(e, mainTodoObj[index]);
-//     });
-//   });
-// }
-
-// function markAsDone(e, currentTodo) {
-//   const todoUl = e.target.closest('.todo-item');
-//   const descriptionLi = todoUl.querySelector('.todo-description');
-//   const todoTitleLi = todoUl.querySelector('.todo-title');
-  
-//   if (e.target.classList.contains('todo-done')) {
-//     if (!currentTodo.isDone) {
-//       descriptionLi.style.textDecoration = 'line-through';
-//       todoTitleLi.style.textDecoration = 'line-through';
-//       currentTodo.isDone = true;
-//       console.log(currentTodo.isDone);
-//     } else {
-//       descriptionLi.style.textDecoration = 'none';
-//       todoTitleLi.style.textDecoration = 'none'; 
-//       currentTodo.isDone = false;
-//       console.log(currentTodo.isDone);
-//     }
-//   }
-// }
-
 
 
 prepopulateDate();
 submitToTodoContainer();
-console.log(mainTodoObj);
+console.log(mainTodoArray);

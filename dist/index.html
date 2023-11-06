@@ -37,7 +37,9 @@
       <form action="" id="form">form
         <legend>To-do info:</legend>
         <div>
-          <!-- <label for="to-do">To-do item:</label> -->
+          <input type="text" id="project-input" name="to-do" placeholder="Project Name" value="Cool project name"/>
+        </div>
+        <div>
           <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="60" placeholder="Enter your to-do" value="This is what I have to do."/>
         </div>
 
@@ -47,14 +49,6 @@
         </div>
 
         <div class="priority-container"><p>Priority:</p>
-          <!-- <input name="high-priority" id="high-priority" type="checkbox" class="priority-checkbox">
-          <label for="high-priority">High</label>
-      
-          <input name="medium-priority" id="medium-priority" type="checkbox" class="priority-checkbox">
-          <label for="medium-priority">Medium</label>
-
-          <input name="low-priority" id="low-priority" type="checkbox" class="priority-checkbox">
-          <label for="low-priority">Low</label> -->
             <button class="priority-btn" id="high">High</button>
             <button class="priority-btn" id="medium">Medium</button>
             <button class="priority-btn" id="low">Low</button>
