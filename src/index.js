@@ -19,8 +19,9 @@ function myPage() {
   const priorityContainer = document.querySelector('.priority-container');
   const createTodoButton = document.querySelector("#create-todo-btn");
   const todoContainer = document.querySelector('.todo-container');
+  const bottomControlsCont = document.querySelector('.bottom-controls');
   
-  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer};
+  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont};
 }
 const page = myPage();
 
@@ -34,14 +35,13 @@ class Project {
       this.projectItems = [];
   }
   addItem(toDoItem) {
-    // console.log("Adding item:", toDoItem);
-
-      this.projectItems.push(toDoItem);
-      // console.log("Current project items:", this.projectItems);
-
+    
+    this.projectItems.push(toDoItem);
+    // console.log('Project Items after adding:', this.projectItems);
   }
   removeItem(toDoItem) {
       this.projectItems.splice(this.projectItems.indexOf(toDoItem), 1);
+      // console.log('Project Items after removing:', this.projectItems);
   }
 }
 
@@ -74,13 +74,10 @@ function determineProject(priority) {
   } else {
     const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
     pushToProjectArray(page.projectInput.value, newToDo);
+    renderProjects();
   }
 }
 
-// function addToProjectList(project) {
-//   projectList[project.name] = project;
-//   projectArray.push(project);
-// }
 
 function submitToTodoContainer () {
   let priority = getPriority.priority;
@@ -120,25 +117,40 @@ function renderTodos() {
   }
 }
 
-function renderTodosInProjectArray() {
-  page.todoContainer.innerHTML = '';
+function renderProjects() {
+  page.bottomControlsCont.innerHTML = '';
   for (const project of projectArray) {
+    const projectEl = document.createElement('li');
+    projectEl.innerText = project.name;
+    projectEl.addEventListener('click', () => {
+      renderTodosInProjectArray(project);
+    })
+    page.bottomControlsCont.append(projectEl);
+  }
+}
+
+
+function renderTodosInProjectArray(project) {
+  page.todoContainer.innerHTML = '';
+  for (const todoItem of project.projectItems) {
     const todoUl = document.createElement('ul');
     todoUl.classList.add('todo-item');
-    const formattedDate = formatTodoDate(todo.dueDate);
+    const formattedDate = formatTodoDate(todoItem.dueDate);
     todoUl.innerHTML = `
-      <li class="todo-title" contenteditable="true">${todo.todo}</li>
-      <li class="todo-description" contenteditable="true">${todo.description}</li>
+      <li class="todo-title" contenteditable="true">${todoItem.todo}</li>
+      <li class="todo-description" contenteditable="true">${todoItem.description}</li>
       <li class="todo-date">${formattedDate}</li>
-      <li class="todo-priority">${todo.priority}</li>
+      <li class="todo-priority">${todoItem.priority}</li>
       <li class="todo-delete"></li>
       <li class="todo-select">Select</li>
       <li class="todo-done">Done</li>
     `;
-    setPriorityStyles(todo, todoUl);
-    const deleteButton = createDeleteButton(todo, todoUl);
+    setPriorityStyles(todoItem, todoUl);
+    const deleteButton = createDeleteButton(todoItem, todoUl);
     todoUl.querySelector('.todo-delete').appendChild(deleteButton);
-    todoUl.setAttribute('id', mainTodoArray.indexOf(todo));
+    console.log('Project:', project);
+    console.log('Project Items:', project.projectItems);
+    todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
     page.todoContainer.append(todoUl);
   }
 }
