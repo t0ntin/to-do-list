@@ -40,19 +40,14 @@ export function formatTodoDate(dateString) {
 export function getPriority(e) {
   if (e) {
     e.preventDefault();
-  let priority = '';
   if (e.target.getAttribute('id') === 'high' ) {
     priority = 'High';    
   }
   if (e.target.getAttribute('id') === 'medium' ) {
     priority = 'Medium';
   }
-  if (e.target.getAttribute('id') === 'low' ) {
-    priority = 'Low';
-  }
-  return {priority};
 } 
-return '';
+return {priority};
 }
 
 export function deleteTodo(todo) {
@@ -68,6 +63,7 @@ export function deleteTodo(todo) {
 export function priorityToggler(e) {
   if (e.target.classList.contains('todo-priority')) {
     const priorityEl = e.target;
+
     if (priorityEl.textContent === 'High') {
       priorityEl.textContent = 'Medium';
       priorityEl.classList.remove('todo-priority-high');

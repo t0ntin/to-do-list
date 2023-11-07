@@ -37,11 +37,9 @@ class Project {
   addItem(toDoItem) {
     
     this.projectItems.push(toDoItem);
-    // console.log('Project Items after adding:', this.projectItems);
   }
   removeItem(toDoItem) {
       this.projectItems.splice(this.projectItems.indexOf(toDoItem), 1);
-      // console.log('Project Items after removing:', this.projectItems);
   }
 }
 
@@ -71,26 +69,26 @@ function pushToProjectArray(name, projectItem) {
 function determineProject(priority) {
   if  (page.projectInput.value.trim() === '') {
     pushToMainTodoArray(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
+    renderTodos(page.todoContainer);
+    togglePriority(page.todoContainer);
+
   } else {
     const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
     pushToProjectArray(page.projectInput.value, newToDo);
     renderProjects();
+    togglePriority(page.todoContainer);
   }
 }
 
 
 function submitToTodoContainer () {
-  let priority = getPriority.priority;
+  let priority = 'Low';
   page.priorityContainer.addEventListener('click',  (e) =>  {
     priority = getPriority(e).priority;
   });
   page.createTodoButton.addEventListener('click', (e)=> {
   e.preventDefault();
     determineProject(priority);
-    renderTodos(page.todoContainer);
-    togglePriority(page.todoContainer);
-    setupEventListenerForMarkAsDone(mainTodoArray);
-    console.log(mainTodoArray);
   });
 }
 
@@ -148,8 +146,6 @@ function renderTodosInProjectArray(project) {
     setPriorityStyles(todoItem, todoUl);
     const deleteButton = createDeleteButton(todoItem, todoUl);
     todoUl.querySelector('.todo-delete').appendChild(deleteButton);
-    console.log('Project:', project);
-    console.log('Project Items:', project.projectItems);
     todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
     page.todoContainer.append(todoUl);
   }
@@ -192,35 +188,45 @@ function togglePriority(todoContainer) {
   });
 }
 
+// function setupEventListenerForMarkAsDone (mainTodoArray) {
+//   const todoItems = document.querySelectorAll('.todo-item');
 
-function setupEventListenerForMarkAsDone (mainTodoArray) {
-  const todoItems = document.querySelectorAll('.todo-item');
+//   todoItems.forEach((item, index) => {
+//     const todoDoneButton = item.querySelector('.todo-done');
 
-  todoItems.forEach((item, index) => {
-    const todoDoneButton = item.querySelector('.todo-done');
-
-    todoDoneButton.addEventListener('click', (e) => {
-      markAsDone(e, mainTodoArray[index]);
-    });
-  });
-}
+//     todoDoneButton.addEventListener('click', (e) => {
+//       markAsDone(e, mainTodoArray[index]);
+//     });
+//   });
+// }
  
+page.todoContainer.addEventListener('click', function(event) {
+  if (event.target.classList.contains('todo-done')) {
+    const todoItem = event.target.closest('.todo-item');
+    if (todoItem) {
+      const index = Array.from(page.todoContainer.children).indexOf(todoItem);
+      if (index > -1) {
+        const currentArray = mainTodoArray.length > index ? mainTodoArray : projectArray;
+        const currentTodo = currentArray[index];
+        markAsDone(event, currentTodo);
+      }
+    }
+  }
+});
+
 function markAsDone(e, currentTodo) {
   const todoUl = e.target.closest('.todo-item');
   const descriptionLi = todoUl.querySelector('.todo-description');
   const todoTitleLi = todoUl.querySelector('.todo-title');
-  
   if (e.target.classList.contains('todo-done')) {
     if (!currentTodo.isDone) {
       descriptionLi.style.textDecoration = 'line-through';
       todoTitleLi.style.textDecoration = 'line-through';
       currentTodo.isDone = true;
-      console.log(currentTodo.isDone);
     } else {
       descriptionLi.style.textDecoration = 'none';
       todoTitleLi.style.textDecoration = 'none'; 
       currentTodo.isDone = false;
-      console.log(currentTodo.isDone);
     }
   }
 }
@@ -229,4 +235,5 @@ function markAsDone(e, currentTodo) {
 
 prepopulateDate();
 submitToTodoContainer();
-console.log(mainTodoArray);
+// console.log(mainTodoArray);
+// console.log(projectArray);
