@@ -1,6 +1,7 @@
+console.log('index.js loaded');
 import './style.css';
-import { getPriority, formatTodoDate, prepopulateDate, deleteTodo, priorityToggler } from './logic';
-import { isFirstDayOfMonth } from 'date-fns';
+import { getPriority, formatTodoDate, prepopulateDate, deleteTodo, priorityToggler, determineProject,setPriorityStyles } from './logic';
+// import { isFirstDayOfMonth } from 'date-fns';
 
 // import Icon from './hamburger.jpg';
 
@@ -8,7 +9,6 @@ import { isFirstDayOfMonth } from 'date-fns';
 // const myIcon = new Image();
 // myIcon.src = Icon;
 // title.append(myIcon);
-
 
 function myPage() {
   const projectInput = document.querySelector('#project-input');
@@ -23,7 +23,7 @@ function myPage() {
   
   return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont};
 }
-const page = myPage();
+export const page = myPage();
 
 const projectList = {};
 const projectArray = [];
@@ -53,33 +53,16 @@ export class Todo {
   }
 }
 
-function pushToMainTodoArray (todo, dueDate, priority, description) {
+export function pushToMainTodoArray (todo, dueDate, priority, description) {
     const newToDo = new Todo (todo, dueDate, priority, description);
     mainTodoArray.push(newToDo);
 }
 
-function pushToProjectArray(name, projectItem) {
+export function pushToProjectArray(name, projectItem) {
   const newProject = new Project(name);
   newProject.addItem(projectItem);
   projectArray.push(newProject);
 }
-
-
-
-function determineProject(priority) {
-  if  (page.projectInput.value.trim() === '') {
-    pushToMainTodoArray(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
-    renderTodos(page.todoContainer);
-    togglePriority(page.todoContainer);
-
-  } else {
-    const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
-    pushToProjectArray(page.projectInput.value, newToDo);
-    renderProjects();
-    togglePriority(page.todoContainer);
-  }
-}
-
 
 function submitToTodoContainer () {
   let priority = 'Low';
@@ -92,7 +75,7 @@ function submitToTodoContainer () {
   });
 }
 
-function renderTodos() {
+export function renderTodos() {
   page.todoContainer.innerHTML = '';
   for (const todo of mainTodoArray) {
     const todoUl = document.createElement('ul');
@@ -115,7 +98,7 @@ function renderTodos() {
   }
 }
 
-function renderProjects() {
+export function renderProjects() {
   page.bottomControlsCont.innerHTML = '';
   for (const project of projectArray) {
     const projectEl = document.createElement('li');
@@ -126,7 +109,6 @@ function renderProjects() {
     page.bottomControlsCont.append(projectEl);
   }
 }
-
 
 function renderTodosInProjectArray(project) {
   page.todoContainer.innerHTML = '';
@@ -151,7 +133,6 @@ function renderTodosInProjectArray(project) {
   }
 }
 
-
 function createDeleteButton(todo, todoUl) {
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'Delete';
@@ -162,31 +143,9 @@ function createDeleteButton(todo, todoUl) {
   return deleteButton;
 }
 
-// INSIDE renderTodos();
-function setPriorityStyles(todo, todoUl) {
-  const priorityEl = todoUl.querySelector('.todo-priority');
-  if (priorityEl.textContent == '') {
-      priorityEl.textContent = 'Low';
-      priorityEl.classList.add('todo-priority-low');
-  }
-  if (todo.priority === 'High') {
-    priorityEl.classList.add('todo-priority-high');
-  }
-  if (todo.priority === 'Medium') {
-    priorityEl.classList.add('todo-priority-medium');
-  }
-  if (todo.priority === 'Low') {
-    priorityEl.classList.add('todo-priority-low');
-  }
-}
 
-function togglePriority(todoContainer) {
-  todoContainer.addEventListener('click', (e) => {
-    if (e.target.matches('.todo-priority')) {
-      priorityToggler(e);
-    }
-  });
-}
+
+
 
 // function setupEventListenerForMarkAsDone (mainTodoArray) {
 //   const todoItems = document.querySelectorAll('.todo-item');
@@ -200,37 +159,6 @@ function togglePriority(todoContainer) {
 //   });
 // }
  
-page.todoContainer.addEventListener('click', function(event) {
-  if (event.target.classList.contains('todo-done')) {
-    const todoItem = event.target.closest('.todo-item');
-    if (todoItem) {
-      const index = Array.from(page.todoContainer.children).indexOf(todoItem);
-      if (index > -1) {
-        const currentArray = mainTodoArray.length > index ? mainTodoArray : projectArray;
-        const currentTodo = currentArray[index];
-        markAsDone(event, currentTodo);
-      }
-    }
-  }
-});
-
-function markAsDone(e, currentTodo) {
-  const todoUl = e.target.closest('.todo-item');
-  const descriptionLi = todoUl.querySelector('.todo-description');
-  const todoTitleLi = todoUl.querySelector('.todo-title');
-  if (e.target.classList.contains('todo-done')) {
-    if (!currentTodo.isDone) {
-      descriptionLi.style.textDecoration = 'line-through';
-      todoTitleLi.style.textDecoration = 'line-through';
-      currentTodo.isDone = true;
-    } else {
-      descriptionLi.style.textDecoration = 'none';
-      todoTitleLi.style.textDecoration = 'none'; 
-      currentTodo.isDone = false;
-    }
-  }
-}
-
 
 
 prepopulateDate();
