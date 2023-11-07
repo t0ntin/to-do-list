@@ -1,7 +1,7 @@
 console.log('logic.js loaded');
 
 
-import { mainTodoArray, Todo, page, pushToMainTodoArray, pushToProjectArray, renderTodos, renderProjects } from ".";
+import { mainTodoArray, projectArray,Todo, page, pushToMainTodoArray, pushToProjectArray, renderTodos, renderProjects } from "./dom.js";
 import {format} from 'date-fns';
 
 
@@ -104,21 +104,22 @@ export function determineProject(priority) {
   }
 }
 
-
-page.todoContainer.addEventListener('click', function(event) {
-  if (event.target.classList.contains('todo-done')) {
-    const todoItem = event.target.closest('.todo-item');
-    if (todoItem) {
-      const index = Array.from(page.todoContainer.children).indexOf(todoItem);
-      console.log(index);
-      if (index > -1) {
-        const currentArray = mainTodoArray.length > index ? mainTodoArray : projectArray;
-        const currentTodo = currentArray[index];
-        markAsDone(event, currentTodo);
+  page.todoContainer.addEventListener('click', function(event) {
+    if (event.target.classList.contains('todo-done')) {
+      const todoItem = event.target.closest('.todo-item');
+      if (todoItem) {
+        const index = Array.from(page.todoContainer.children).indexOf(todoItem);
+        console.log(index);
+        if (index > -1) {
+          const currentArray = mainTodoArray.length > index ? mainTodoArray : projectArray;
+          const currentTodo = currentArray[index];
+          markAsDone(event, currentTodo);
+        }
       }
     }
-  }
-});
+  });
+
+
 
 function markAsDone(e, currentTodo) {
   const todoUl = e.target.closest('.todo-item');
