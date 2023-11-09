@@ -1,4 +1,3 @@
-console.log('index.js loaded');
 import './style.css';
 import { prepopulateDate } from './logic';
 import { submitToTodoContainer } from './dom.js';

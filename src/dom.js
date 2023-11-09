@@ -29,7 +29,6 @@ class Project {
       this.projectItems = [];
   }
   addItem(toDoItem) {
-    
     this.projectItems.push(toDoItem);
   }
   removeItem(toDoItem) {
@@ -89,24 +88,33 @@ export function renderTodos() {
     todoUl.querySelector('.todo-delete').appendChild(deleteButton);
     todoUl.setAttribute('id', mainTodoArray.indexOf(todo));
     page.todoContainer.append(todoUl);
+    console.log(mainTodoArray);
   }
-}
+} 
 
-export function renderProjects() {
+export function renderProjectList() {
   page.bottomControlsCont.innerHTML = '';
   for (const project of projectArray) {
     const projectEl = document.createElement('li');
     projectEl.innerText = project.name;
+    console.log(projectArray);
     projectEl.addEventListener('click', () => {
       renderTodosInProjectArray(project);
+      console.log(project);
     })
     page.bottomControlsCont.append(projectEl);
   }
 }
 
-function renderTodosInProjectArray(project) {
+
+   
+
+export function renderTodosInProjectArray(project) {
   page.todoContainer.innerHTML = '';
+  console.log(project);
+  // const projectItems = projectArray.projectItems;
   for (const todoItem of project.projectItems) {
+    // console.log(todoItem.dueDate);
     const todoUl = document.createElement('ul');
     todoUl.classList.add('todo-item');
     const formattedDate = formatTodoDate(todoItem.dueDate);
@@ -124,8 +132,9 @@ function renderTodosInProjectArray(project) {
     todoUl.querySelector('.todo-delete').appendChild(deleteButton);
     todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
     page.todoContainer.append(todoUl);
+    console.log(projectArray);
   }
-}
+} 
 
 function createDeleteButton(todo, todoUl) {
   const deleteButton = document.createElement('button');

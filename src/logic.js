@@ -1,7 +1,6 @@
-console.log('logic.js loaded');
 
 
-import { mainTodoArray, projectArray,Todo, page, pushToMainTodoArray, pushToProjectArray, renderTodos, renderProjects } from "./dom.js";
+import { mainTodoArray, projectArray,Todo, page, pushToMainTodoArray, pushToProjectArray, renderTodos, renderProjectList, renderTodosInProjectArray } from "./dom.js";
 import {format} from 'date-fns';
 
 
@@ -23,7 +22,7 @@ export function formatTodoDate(dateString) {
 export function getPriority(e) {
   if (e) {
     e.preventDefault();
-    let priority;
+    let priority = 'Low';
   if (e.target.getAttribute('id') === 'high' ) {
     priority = 'High';    
   }
@@ -90,17 +89,31 @@ export function setPriorityStyles(todo, todoUl) {
   }
 }
 
+
 export function determineProject(priority) {
-  if  (page.projectInput.value.trim() === '') {
-    pushToMainTodoArray(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
+  if (page.projectInput.value.trim() === '') {
+    pushToMainTodoArray(
+      page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value
+    );
     renderTodos(page.todoContainer);
     togglePriority(page.todoContainer);
-
   } else {
-    const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value);
-    pushToProjectArray(page.projectInput.value, newToDo);
-    renderProjects();
-    togglePriority(page.todoContainer);
+    const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority, page.descriptionInput.value
+    );
+    const projectName = page.projectInput.value;
+    pushToProjectArray(projectName, newToDo);
+
+    // Find the project object from projectArray based on the project name
+    const selectedProject = projectArray.find((project) => project.name === projectName);
+
+    // Check if the selected project is defined before rendering
+    if (selectedProject) {
+      renderProjectList();
+      togglePriority(page.todoContainer);
+      renderTodosInProjectArray(selectedProject);
+    } else {
+      console.error("The selected project is not found in the projectArray.");
+    }
   }
 }
 
@@ -118,8 +131,6 @@ export function determineProject(priority) {
       }
     }
   });
-
-
 
 function markAsDone(e, currentTodo) {
   const todoUl = e.target.closest('.todo-item');
