@@ -1,6 +1,6 @@
 
 
-import { mainTodoArray, projectArray,Todo, page, pushToMainTodoArray, pushToProjectArray, renderTodos, renderProjectList, renderTodosInProjectArray } from "./dom.js";
+import { mainTodoArray, projectArray,Todo, page, pushToMainTodoArray, pushToProjectArray, renderTodos, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject} from "./dom.js";
 import {format} from 'date-fns';
 
 
@@ -91,31 +91,40 @@ export function setPriorityStyles(todo, todoUl) {
 
 
 export function determineProject(priority) {
-  if (page.projectInput.value.trim() === '') {
-    pushToMainTodoArray(
-      page.todoInput.value, page.dueDateInput.value, priority, page.descriptionInput.value
-    );
-    renderTodos(page.todoContainer);
+  const untitledProjectExists = projectArray.find((project) => project.name === 'Untitled Project');
+  let userInputProjectName = page.projectInput.value;
+  const existingProject = projectArray.find((project) => project.name === userInputProjectName);
+  const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority, page.descriptionInput.value);
+  if (userInputProjectName && existingProject) {
+    pushTodoToExistingProject(newToDo,existingProject);
+    renderProjectList();
     togglePriority(page.todoContainer);
-  } else {
-    const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority, page.descriptionInput.value
-    );
-    const projectName = page.projectInput.value;
-    pushToProjectArray(projectName, newToDo);
-
-    // Find the project object from projectArray based on the project name
-    const selectedProject = projectArray.find((project) => project.name === projectName);
-
-    // Check if the selected project is defined before rendering
-    if (selectedProject) {
-      renderProjectList();
-      togglePriority(page.todoContainer);
-      renderTodosInProjectArray(selectedProject);
-    } else {
-      console.error("The selected project is not found in the projectArray.");
-    }
+    renderTodosInProjectArray(existingProject.name);
   }
+  if (userInputProjectName && !existingProject) {
+    pushToProjectArray(userInputProjectName, newToDo)
+    renderProjectList();
+    togglePriority(page.todoContainer);
+    renderTodosInProjectArray(userInputProjectName);
+  }
+  if (!userInputProjectName && untitledProjectExists){
+    pushTodoToExistingProject(newToDo, untitledProjectExists);
+    renderProjectList();
+    togglePriority(page.todoContainer);
+    console.log("it's working");
+    renderTodosInProjectArray("Untitled Project");
+  } 
+  if (!userInputProjectName && !untitledProjectExists) {
+    pushToProjectArray("Untitled Project", newToDo)
+    renderProjectList();
+    togglePriority(page.todoContainer);
+    renderTodosInProjectArray("Untitled Project");
+  }
+  
 }
+
+
+
 
   page.todoContainer.addEventListener('click', function(event) {
     if (event.target.classList.contains('todo-done')) {
