@@ -112,7 +112,7 @@ export function renderProjectList() {
 
 export function renderTodosInProjectArray(projectNameOrObject) {
   page.todoContainer.innerHTML = '';
-  console.log('Before rendering todos:', projectArray, projectNameOrObject);
+  // console.log('Before rendering todos:', projectArray, projectNameOrObject);
 
   let project;
 
@@ -125,10 +125,10 @@ export function renderTodosInProjectArray(projectNameOrObject) {
     return;
   }
     if (project) {
-      console.log('Project found:', project);
-      console.log(projectArray);
-      console.log('Type of projectItems:', typeof project.projectItems);
-      console.log('Type of projectItems:', Array.isArray(project.projectItems) ? 'Array' : 'Not an Array');
+      // console.log('Project found:', project);
+      // console.log(projectArray);
+      // console.log('Type of projectItems:', typeof project.projectItems);
+      // console.log('Type of projectItems:', Array.isArray(project.projectItems) ? 'Array' : 'Not an Array');
 
 
 
