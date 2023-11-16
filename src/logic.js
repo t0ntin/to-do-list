@@ -176,7 +176,6 @@ function markAsDone(event, currentProject) {
     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
 
     if (index !== -1 && currentProject) {
-      // const projectIndex = index - projectArray.indexOf(currentProject);
       const currentTodo = currentProject.projectItems[index];
 
       if (currentTodo) {
