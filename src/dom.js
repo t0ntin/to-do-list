@@ -17,11 +17,9 @@ function myPage() {
   return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont};
 }
 export const page = myPage();
+export let currentProject;
 
-
-const projectList = {};
 export const projectArray = [];
-export const mainTodoArray = [];
 
 class Project {
   constructor(name) {
@@ -46,21 +44,19 @@ export class Todo {
   }
 }
 
-export function pushToMainTodoArray (todo, dueDate, priority, description) {
-    const newToDo = new Todo (todo, dueDate, priority, description);
-    mainTodoArray.push(newToDo);
-}
-
 export function pushToProjectArray(name, projectItem) {
   const newProject = new Project(name);
   newProject.addItem(projectItem);
   projectArray.push(newProject);
+  currentProject = newProject;
+  console.log(newProject);
   console.log(projectArray);
 }
-
+ 
 export function pushTodoToExistingProject(newToDo, existingProject) {
-  // const newToDo = new Todo (todo, dueDate, priority, description);
   existingProject.addItem(newToDo);
+  currentProject = existingProject;
+  console.log(existingProject);
   console.log(projectArray);
 }
 
@@ -104,9 +100,9 @@ export function renderProjectList() {
   for (const project of projectArray) {
     const projectEl = document.createElement('li');
     projectEl.innerText = project.name;
-    console.log(projectArray);
     projectEl.addEventListener('click', () => {
-      renderTodosInProjectArray(project);
+      renderTodosInProjectArray(project.name);
+      currentProject = project.name;
       console.log(project);
     })
     page.bottomControlsCont.append(projectEl);
@@ -124,20 +120,19 @@ export function renderTodosInProjectArray(projectName) {
       console.log('Project found:', project);
 
       for (const todoItem of project.projectItems) {
-        console.log('Todo item:', todoItem);
 
         const todoUl = document.createElement('ul');
         todoUl.classList.add('todo-item');
         const formattedDate = formatTodoDate(todoItem.dueDate);
         todoUl.innerHTML = `
-          <li class="todo-title" contenteditable="true">${todoItem.todo}</li>
-          <li class="todo-description" contenteditable="true">${todoItem.description}</li>
-          <li class="todo-date">${formattedDate}</li>
-          <li class="todo-priority">${todoItem.priority}</li>
-          <li class="todo-delete"></li>
-          <li class="todo-select">Select</li>
-          <li class="todo-done">Done</li>
-        `;
+        <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
+        <li class="todo-description ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.description}</li>
+        <li class="todo-date">${formattedDate}</li>
+        <li class="todo-priority">${todoItem.priority}</li>
+        <li class="todo-delete"></li>
+        <li class="todo-select">Select</li>
+        <li class="todo-done ${todoItem.isDone}">Done</li>
+      `;
         setPriorityStyles(todoItem, todoUl);
         const deleteButton = createDeleteButton(todoItem, todoUl);
         todoUl.querySelector('.todo-delete').appendChild(deleteButton);
@@ -188,6 +183,8 @@ function createDeleteButton(todo, todoUl) {
   deleteButton.addEventListener('click', () => {
       deleteTodo(todo);
       todoUl.remove();
+    console.log(projectArray);
+
     });
   return deleteButton;
 }
