@@ -1,5 +1,5 @@
 
-import { getPriority, formatTodoDate, deleteTodo, determineProject,setPriorityStyles } from './logic';
+import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from './logic';
 
 
 
@@ -90,8 +90,6 @@ export function renderProjectList() {
 
 export function renderTodosInProjectArray(projectNameOrObject) {
   page.todoContainer.innerHTML = '';
-  // console.log('Before rendering todos:', projectArray, projectNameOrObject);
-
   let project;
 
   if (typeof projectNameOrObject === 'string') {
@@ -103,10 +101,6 @@ export function renderTodosInProjectArray(projectNameOrObject) {
     return;
   }
     if (project) {
-      // console.log('Project found:', project);
-      // console.log(projectArray);
-      // console.log('Type of projectItems:', typeof project.projectItems);
-      // console.log('Type of projectItems:', Array.isArray(project.projectItems) ? 'Array' : 'Not an Array');
       for (const todoItem of project.projectItems) {
 
         const todoUl = document.createElement('ul');
@@ -122,7 +116,7 @@ export function renderTodosInProjectArray(projectNameOrObject) {
         <li class="todo-done">Done</li>
         `;
         setPriorityStyles(todoItem, todoUl);
-        const deleteButton = createDeleteButton(todoItem, todoUl);
+        const deleteButton = createDeleteButton(todoItem, todoUl, currentProject);
         todoUl.querySelector('.todo-delete').appendChild(deleteButton);
         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
         page.todoContainer.append(todoUl);
@@ -130,21 +124,29 @@ export function renderTodosInProjectArray(projectNameOrObject) {
     } else {
       console.log(project); // This will log the project object
     }
-  // } else {
-  //   console.error(`Invalid project name: ${projectName}`);
-  // }
 }
 
 
 
-function createDeleteButton(todo, todoUl) {
+// function createDeleteButton(todo, todoUl) {
+//   const deleteButton = document.createElement('button');
+//   deleteButton.innerText = 'Delete';
+//   deleteButton.addEventListener('click', () => {
+//     deleteTodo(todo);
+//     todoUl.remove();
+//     console.log(projectArray);
+
+//   });
+//   return deleteButton;
+// }
+
+export function createDeleteButton(todo, todoUl, currentProject) {
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'Delete';
   deleteButton.addEventListener('click', () => {
-      deleteTodo(todo);
-      todoUl.remove();
+    currentProject.removeItem(todo);
+    todoUl.remove();
     console.log(projectArray);
-
-    });
+  });
   return deleteButton;
 }
