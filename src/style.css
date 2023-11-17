@@ -291,7 +291,7 @@ input[type="checkbox"] {
 }
 
 .todo-date {
-  background-color: red;
+  background-color: rgba(255, 0, 0, 0.418);
   grid-column: 3/4;
   grid-row: 3/4;
   text-align: center;
@@ -314,7 +314,7 @@ input[type="checkbox"] {
 }
 
 .todo-priority-low {
-  background-color: green; 
+  background-color: rgb(2, 84, 2); 
 }
 
 .todo-delete {
@@ -323,10 +323,11 @@ input[type="checkbox"] {
   text-align: center;
 }
 
-.todo-select {
+.todo-move {
   grid-column: 1/2;
   grid-row: 3/4;
   text-align: center;
+  background-color: rgb(5, 91, 131);
 }
 
 .todo-done {

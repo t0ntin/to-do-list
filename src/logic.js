@@ -1,6 +1,6 @@
 
 
-import { projectArray,Todo, page, pushToProjectArray, renderTodos, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject} from "./dom.js";
+import { projectArray,Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject} from "./dom.js";
 import {format, parseISO} from 'date-fns';
 
 
@@ -12,11 +12,7 @@ export function prepopulateDate() {
     document.getElementById('date').value = dateFormatted;
   });
 } 
-// export function formatTodoDate(dateString) {
-//   const date = new Date(dateString);
-//   const formattedDate = format(date, 'MMM d');
-//   return formattedDate;
-// }
+
 
 export function formatTodoDate(dateString) {
   const date = parseISO(dateString);
@@ -52,13 +48,27 @@ export function deleteTodo(todo) {
 }
 
 
-export function priorityToggler(e) {
-  const todoItem = e.target.closest('.todo-item');
+function getIndexAndCurrentTodo(target) {
+  const todoItem = target.closest('.todo-item');
   if (todoItem) {
     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
-  
     if (index !== -1 && currentProject) {
       const currentTodo = currentProject.projectItems[index];
+      return { index, currentTodo };
+    }
+  }
+  return { index: -1, currentTodo: null };
+}
+
+
+export function priorityToggler(e) {
+  const { index, currentTodo } = getIndexAndCurrentTodo(e.target);
+  // const todoItem = e.target.closest('.todo-item');
+  // if (todoItem) {
+  //   const index = Array.from(page.todoContainer.children).indexOf(todoItem);
+  
+  //   if (index !== -1 && currentProject) {
+  //     const currentTodo = currentProject.projectItems[index];
   
       if (currentTodo) {
         
@@ -83,8 +93,8 @@ export function priorityToggler(e) {
           }
         }
       }
-    }
-  }
+  //   }
+  // }
 }
 
 // export function priorityToggler(e) {
@@ -168,13 +178,16 @@ export function determineProject(priority) {
 }
 
 
-function markAsDone(event, currentProject) {
-  const todoItem = event.target.closest('.todo-item');
-  if (todoItem) {
-    const index = Array.from(page.todoContainer.children).indexOf(todoItem);
 
-    if (index !== -1 && currentProject) {
-      const currentTodo = currentProject.projectItems[index];
+
+function markAsDone(event, currentProject) {
+  const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+  // const todoItem = event.target.closest('.todo-item');
+  // if (todoItem) {
+  //   // const index = Array.from(page.todoContainer.children).indexOf(todoItem);
+
+  //   if (index !== -1 && currentProject) {
+  //     const currentTodo = currentProject.projectItems[index];
 
       if (currentTodo) {
         const todoUl = page.todoContainer.children[index];
@@ -191,8 +204,8 @@ function markAsDone(event, currentProject) {
           currentTodo.isDone = false;
         }
       }
-    }
-  }
+  //   }
+  // }
 }
 
 page.todoContainer.addEventListener('click', function(event) {
@@ -203,6 +216,39 @@ page.todoContainer.addEventListener('click', function(event) {
 
 
 
+page.todoContainer.addEventListener('click', moveTodoItem);
 
 
+function moveTodoItem (event) {
+  const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+  if (currentTodo) {
+    if (event.target.classList.contains('todo-move')) {
+        const moveDropDownContainer = document.createElement('div');
+        moveDropDownContainer.classList.add('dropdown-container')
+        moveDropDownContainer.innerText = "Move this todo to:"
+        page.todoContainer.append(moveDropDownContainer);
+        const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+        dropdownArray.forEach((dropdownArrayItem)  => {
+          const moveDropDownEl = document.createElement('button');
+          moveDropDownEl.classList.add('dropdown-button')
+          moveDropDownEl.innerText = dropdownArrayItem.name;
+          moveDropDownContainer.append(moveDropDownEl);
+          moveDropDownEl.addEventListener('click', (e) => {
+            const selectedProject = e.target;
+            console.log(selectedProject);
+            if (selectedProject.classList.contains('dropdown-button')) {
+              const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
+              console.log(selectedProjectExists);
+              if (selectedProjectExists) {
+                selectedProjectExists.addItem(currentTodo);
+                currentProject.removeItem(currentTodo);
+                renderTodosInProjectArray(currentProject);
+                console.log(projectArray);
+              }
+            }
+          })
+        })
+    }
+  }
 
+}

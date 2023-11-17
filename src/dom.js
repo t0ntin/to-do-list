@@ -17,9 +17,11 @@ function myPage() {
   return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont};
 }
 export const page = myPage();
-export let currentProject;
 
 export const projectArray = [];
+export let currentProject;
+
+
 
 class Project {
   constructor(name) {
@@ -71,30 +73,6 @@ export function submitToTodoContainer () {
   });
 }
 
-export function renderTodos() {
-  page.todoContainer.innerHTML = '';
-  for (const todo of mainTodoArray) {
-    const todoUl = document.createElement('ul');
-    todoUl.classList.add('todo-item');
-    const formattedDate = formatTodoDate(todo.dueDate);
-    todoUl.innerHTML = `
-      <li class="todo-title" contenteditable="true">${todo.todo}</li>
-      <li class="todo-description" contenteditable="true">${todo.description}</li>
-      <li class="todo-date">${formattedDate}</li>
-      <li class="todo-priority">${todo.priority}</li>
-      <li class="todo-delete"></li>
-      <li class="todo-select">Select</li>
-      <li class="todo-done">Done</li>
-    `;
-    setPriorityStyles(todo, todoUl);
-    const deleteButton = createDeleteButton(todo, todoUl);
-    todoUl.querySelector('.todo-delete').appendChild(deleteButton);
-    todoUl.setAttribute('id', mainTodoArray.indexOf(todo));
-    page.todoContainer.append(todoUl);
-    console.log(mainTodoArray);
-  }
-} 
-
 export function renderProjectList() {
   page.bottomControlsCont.innerHTML = '';
   for (const project of projectArray) {
@@ -129,9 +107,6 @@ export function renderTodosInProjectArray(projectNameOrObject) {
       // console.log(projectArray);
       // console.log('Type of projectItems:', typeof project.projectItems);
       // console.log('Type of projectItems:', Array.isArray(project.projectItems) ? 'Array' : 'Not an Array');
-
-
-
       for (const todoItem of project.projectItems) {
 
         const todoUl = document.createElement('ul');
@@ -143,7 +118,7 @@ export function renderTodosInProjectArray(projectNameOrObject) {
         <li class="todo-date">${formattedDate}</li>
         <li class="todo-priority">${todoItem.priority}</li>
         <li class="todo-delete"></li>
-        <li class="todo-select">Select</li>
+        <li class="todo-move">Move</li>
         <li class="todo-done">Done</li>
         `;
         setPriorityStyles(todoItem, todoUl);
@@ -159,45 +134,6 @@ export function renderTodosInProjectArray(projectNameOrObject) {
   //   console.error(`Invalid project name: ${projectName}`);
   // }
 }
-
-// export function renderTodosInProjectArray(projectName) {
-//   page.todoContainer.innerHTML = '';
-//   console.log('Before rendering todos:', projectArray, projectName);
-
-//   if (typeof projectName === 'string') {
-//     const project = projectArray.find((project) => project.name === projectName);
-
-//     if (project) {
-//       console.log('Project found:', project);
-//       console.log(projectArray);
-
-//       for (const todoItem of project.projectItems) {
-
-//         const todoUl = document.createElement('ul');
-//         todoUl.classList.add('todo-item');
-//         const formattedDate = formatTodoDate(todoItem.dueDate);
-//         todoUl.innerHTML = `
-//         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
-//         <li class="todo-description ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.description}</li>
-//         <li class="todo-date">${formattedDate}</li>
-//         <li class="todo-priority">${todoItem.priority}</li>
-//         <li class="todo-delete"></li>
-//         <li class="todo-select">Select</li>
-//         <li class="todo-done">Done</li>
-//       `;
-//         setPriorityStyles(todoItem, todoUl);
-//         const deleteButton = createDeleteButton(todoItem, todoUl);
-//         todoUl.querySelector('.todo-delete').appendChild(deleteButton);
-//         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
-//         page.todoContainer.append(todoUl);
-//       }
-//     } else {
-//       console.log(project); // This will log the project object
-//     }
-//   } else {
-//     console.error(`Invalid project name: ${projectName}`);
-//   }
-// }
 
 
 
