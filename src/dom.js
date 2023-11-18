@@ -13,8 +13,15 @@ function myPage() {
   const createTodoButton = document.querySelector("#create-todo-btn");
   const todoContainer = document.querySelector('.todo-container');
   const bottomControlsCont = document.querySelector('.bottom-controls');
+
+  const moveDropDownContainer = document.createElement('div');
+  moveDropDownContainer.classList.add('dropdown-container')
+  moveDropDownContainer.innerText = "Move this todo to:"
   
-  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont};
+  const moveDropDownEl = document.createElement('button');
+  moveDropDownEl.classList.add('dropdown-button')
+
+  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, moveDropDownEl};
 }
 export const page = myPage();
 

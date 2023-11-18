@@ -37,8 +37,6 @@ return {priority};
 }
 
 
-
-
 function getIndexAndCurrentTodo(target) {
   const todoItem = target.closest('.todo-item');
   if (todoItem) {
@@ -52,71 +50,6 @@ function getIndexAndCurrentTodo(target) {
   }
   return { index: -1, currentTodo: null };
 }
-
-
-// export function priorityToggler(e) {
-//   console.log('priorityToggler triggered');
-//   // e.preventDefault();
-//   // e.stopPropagation();
-//   const { index, currentTodo } = getIndexAndCurrentTodo(e.target, currentProject);
-
-//   if (currentTodo) {
-//     if (e.target.classList.contains('todo-priority')) {
-//       const priorityEl = e.target;
-
-//       if (priorityEl.textContent === 'High') {
-//         priorityEl.textContent = 'Medium';
-//         priorityEl.classList.remove('todo-priority-high');
-//         priorityEl.classList.add('todo-priority-medium');
-//         currentTodo.priority = 'Medium';
-//       } else if (priorityEl.textContent === 'Medium') {
-//         priorityEl.textContent = 'Low';
-//         priorityEl.classList.remove('todo-priority-medium');
-//         priorityEl.classList.add('todo-priority-low');
-//         currentTodo.priority = 'Low';
-//       } else if (priorityEl.textContent === 'Low') {
-//         priorityEl.textContent = 'High';
-//         priorityEl.classList.remove('todo-priority-low');
-//         priorityEl.classList.add('todo-priority-high');
-//         currentTodo.priority = 'High';
-//       }
-//     }
-//   }
-// }
-
-
-
-
-
-// export function priorityToggler(e) {
-
-//   console.log('priorityToggler triggered');
-
-//   const { index, currentTodo } = getIndexAndCurrentTodo(e.target);
-//       if (currentTodo) {
-        
-//         if (e.target.classList.contains('todo-priority')) {
-//           const priorityEl = e.target;
-      
-//           if (priorityEl.textContent === 'High') {
-//             priorityEl.textContent = 'Medium';
-//             priorityEl.classList.remove('todo-priority-high');
-//             priorityEl.classList.add('todo-priority-medium');
-//             currentProject.projectItems[index].priority = 'Medium';
-//           } else if (priorityEl.textContent === 'Medium') {
-//             priorityEl.textContent = 'Low';
-//             priorityEl.classList.remove('todo-priority-medium');
-//             priorityEl.classList.add('todo-priority-low');
-//             currentProject.projectItems[index].priority = 'Low';
-//           } else if (priorityEl.textContent === 'Low') {
-//             priorityEl.textContent = 'High';
-//             priorityEl.classList.remove('todo-priority-low');
-//             priorityEl.classList.add('todo-priority-high');
-//             currentProject.projectItems[index].priority = 'High';
-//           }
-//         }
-//       }
-// }
 
 page.todoContainer.addEventListener('click', togglePriority);
 
@@ -201,9 +134,6 @@ export function determineProject(priority) {
   
 }
 
-
-
-
 function markAsDone(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
     if (currentTodo) {
@@ -231,25 +161,18 @@ page.todoContainer.addEventListener('click', function(event) {
 });
 
 
-
 page.todoContainer.addEventListener('click', moveTodoItem);
-
 
 function moveTodoItem (event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
   if (currentTodo) {
     if (event.target.classList.contains('todo-move')) {
-        const moveDropDownContainer = document.createElement('div');
-        moveDropDownContainer.classList.add('dropdown-container')
-        moveDropDownContainer.innerText = "Move this todo to:"
-        page.todoContainer.append(moveDropDownContainer);
+        page.todoContainer.append(page.moveDropDownContainer);
         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
         dropdownArray.forEach((dropdownArrayItem)  => {
-          const moveDropDownEl = document.createElement('button');
-          moveDropDownEl.classList.add('dropdown-button')
-          moveDropDownEl.innerText = dropdownArrayItem.name;
-          moveDropDownContainer.append(moveDropDownEl);
-          moveDropDownEl.addEventListener('click', () => {
+          page.moveDropDownEl.innerText = dropdownArrayItem.name;
+          page.moveDropDownContainer.append(page.moveDropDownEl);
+          page.moveDropDownEl.addEventListener('click', () => {
               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
               console.log(selectedProjectExists);
               if (selectedProjectExists) {
@@ -266,4 +189,32 @@ function moveTodoItem (event) {
 }
 
 
+// function moveTodoItem (event) {
+//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+//   if (currentTodo) {
+//     if (event.target.classList.contains('todo-move')) {
+//         const moveDropDownContainer = document.createElement('div');
+//         moveDropDownContainer.classList.add('dropdown-container')
+//         moveDropDownContainer.innerText = "Move this todo to:"
+//         page.todoContainer.append(moveDropDownContainer);
+//         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+//         dropdownArray.forEach((dropdownArrayItem)  => {
+//           const moveDropDownEl = document.createElement('button');
+//           moveDropDownEl.classList.add('dropdown-button')
+//           moveDropDownEl.innerText = dropdownArrayItem.name;
+//           moveDropDownContainer.append(moveDropDownEl);
+//           moveDropDownEl.addEventListener('click', () => {
+//               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
+//               console.log(selectedProjectExists);
+//               if (selectedProjectExists) {
+//                 selectedProjectExists.addItem(currentTodo);
+//                 currentProject.removeItem(currentTodo);
+//                 renderTodosInProjectArray(currentProject);
+//                 console.log(projectArray);
+//               }
+//           })
+//         })
+//     }
+//   }
 
+// }
