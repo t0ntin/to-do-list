@@ -43,6 +43,8 @@ function getIndexAndCurrentTodo(target) {
   const todoItem = target.closest('.todo-item');
   if (todoItem) {
     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
+    console.log(page.todoContainer.children);
+
     if (index !== -1 && currentProject) {
       const currentTodo = currentProject.projectItems[index];
       return { index, currentTodo };
@@ -86,41 +88,67 @@ function getIndexAndCurrentTodo(target) {
 
 
 
-export function priorityToggler(e) {
-  const { index, currentTodo } = getIndexAndCurrentTodo(e.target);
-      if (currentTodo) {
+// export function priorityToggler(e) {
+
+//   console.log('priorityToggler triggered');
+
+//   const { index, currentTodo } = getIndexAndCurrentTodo(e.target);
+//       if (currentTodo) {
         
-        if (e.target.classList.contains('todo-priority')) {
-          const priorityEl = e.target;
+//         if (e.target.classList.contains('todo-priority')) {
+//           const priorityEl = e.target;
       
-          if (priorityEl.textContent === 'High') {
-            priorityEl.textContent = 'Medium';
-            priorityEl.classList.remove('todo-priority-high');
-            priorityEl.classList.add('todo-priority-medium');
-            currentProject.projectItems[index].priority = 'Medium';
-          } else if (priorityEl.textContent === 'Medium') {
-            priorityEl.textContent = 'Low';
-            priorityEl.classList.remove('todo-priority-medium');
-            priorityEl.classList.add('todo-priority-low');
-            currentProject.projectItems[index].priority = 'Low';
-          } else if (priorityEl.textContent === 'Low') {
-            priorityEl.textContent = 'High';
-            priorityEl.classList.remove('todo-priority-low');
-            priorityEl.classList.add('todo-priority-high');
-            currentProject.projectItems[index].priority = 'High';
+//           if (priorityEl.textContent === 'High') {
+//             priorityEl.textContent = 'Medium';
+//             priorityEl.classList.remove('todo-priority-high');
+//             priorityEl.classList.add('todo-priority-medium');
+//             currentProject.projectItems[index].priority = 'Medium';
+//           } else if (priorityEl.textContent === 'Medium') {
+//             priorityEl.textContent = 'Low';
+//             priorityEl.classList.remove('todo-priority-medium');
+//             priorityEl.classList.add('todo-priority-low');
+//             currentProject.projectItems[index].priority = 'Low';
+//           } else if (priorityEl.textContent === 'Low') {
+//             priorityEl.textContent = 'High';
+//             priorityEl.classList.remove('todo-priority-low');
+//             priorityEl.classList.add('todo-priority-high');
+//             currentProject.projectItems[index].priority = 'High';
+//           }
+//         }
+//       }
+// }
+
+page.todoContainer.addEventListener('click', togglePriority);
+
+
+export function togglePriority(e) {
+  console.log('togglePriority triggered');
+  if (e.target) {
+    const priorityEl = e.target.closest('.todo-priority');
+    if (priorityEl) {
+          const { index, currentTodo } = getIndexAndCurrentTodo(e.target);
+          if (currentTodo) {
+            if (priorityEl.textContent === 'High') {
+              priorityEl.textContent = 'Medium';
+              priorityEl.classList.remove('todo-priority-high');
+              priorityEl.classList.add('todo-priority-medium');
+              currentProject.projectItems[index].priority = 'Medium';
+            } else if (priorityEl.textContent === 'Medium') {
+              priorityEl.textContent = 'Low';
+              priorityEl.classList.remove('todo-priority-medium');
+              priorityEl.classList.add('todo-priority-low');
+              currentProject.projectItems[index].priority = 'Low';
+            } else if (priorityEl.textContent === 'Low') {
+              priorityEl.textContent = 'High';
+              priorityEl.classList.remove('todo-priority-low');
+              priorityEl.classList.add('todo-priority-high');
+              currentProject.projectItems[index].priority = 'High';
+            }
           }
         }
-      }
+  }
 }
 
-
-function togglePriority(todoContainer) {
-  todoContainer.addEventListener('click', (e) => {
-    if (e.target.matches('.todo-priority')) {
-      priorityToggler(e);
-    }
-  });
-}
 
 // INSIDE renderTodos();
 export function setPriorityStyles(todo, todoUl) {
@@ -192,6 +220,7 @@ function markAsDone(event) {
         descriptionLi.classList.remove('todo-marked-as-done');
         currentTodo.isDone = false;
       }
+      console.log('marked as done');
     }
 }
 

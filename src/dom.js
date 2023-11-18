@@ -22,7 +22,6 @@ export const projectArray = [];
 export let currentProject;
 
 
-
 class Project {
   constructor(name) {
       this.name = name;
@@ -125,20 +124,6 @@ export function renderTodosInProjectArray(projectNameOrObject) {
       console.log(project); // This will log the project object
     }
 }
-
-
-
-// function createDeleteButton(todo, todoUl) {
-//   const deleteButton = document.createElement('button');
-//   deleteButton.innerText = 'Delete';
-//   deleteButton.addEventListener('click', () => {
-//     deleteTodo(todo);
-//     todoUl.remove();
-//     console.log(projectArray);
-
-//   });
-//   return deleteButton;
-// }
 
 export function createDeleteButton(todo, todoUl, currentProject) {
   const deleteButton = document.createElement('button');
