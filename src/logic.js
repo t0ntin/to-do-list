@@ -41,10 +41,10 @@ function getIndexAndCurrentTodo(target) {
   const todoItem = target.closest('.todo-item');
   if (todoItem) {
     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
-    console.log(page.todoContainer.children);
-
+    // console.log(page.todoContainer.children);
     if (index !== -1 && currentProject) {
       const currentTodo = currentProject.projectItems[index];
+      // console.log(page.todoContainer.children);
       return { index, currentTodo };
     }
   }
@@ -55,7 +55,7 @@ page.todoContainer.addEventListener('click', togglePriority);
 
 
 export function togglePriority(e) {
-  console.log('togglePriority triggered');
+  // console.log('togglePriority triggered');
   if (e.target) {
     const priorityEl = e.target.closest('.todo-priority');
     if (priorityEl) {
@@ -188,33 +188,66 @@ function moveTodoItem (event) {
 
 }
 
+// page.todoContainer.addEventListener('click', showCalendar);
 
-// function moveTodoItem (event) {
-//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-//   if (currentTodo) {
-//     if (event.target.classList.contains('todo-move')) {
-//         const moveDropDownContainer = document.createElement('div');
-//         moveDropDownContainer.classList.add('dropdown-container')
-//         moveDropDownContainer.innerText = "Move this todo to:"
-//         page.todoContainer.append(moveDropDownContainer);
-//         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
-//         dropdownArray.forEach((dropdownArrayItem)  => {
-//           const moveDropDownEl = document.createElement('button');
-//           moveDropDownEl.classList.add('dropdown-button')
-//           moveDropDownEl.innerText = dropdownArrayItem.name;
-//           moveDropDownContainer.append(moveDropDownEl);
-//           moveDropDownEl.addEventListener('click', () => {
-//               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
-//               console.log(selectedProjectExists);
-//               if (selectedProjectExists) {
-//                 selectedProjectExists.addItem(currentTodo);
-//                 currentProject.removeItem(currentTodo);
-//                 renderTodosInProjectArray(currentProject);
-//                 console.log(projectArray);
-//               }
-//           })
-//         })
-//     }
-//   }
+page.todoContainer.addEventListener('click', function(event) {
+  showCalendar(event);
+});
 
-// }
+function showCalendar(event) {
+
+  const todoItem = event.target.classList.contains('todo-date');
+  const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+
+  if (todoItem) {
+    const todoItemRect = event.target.getBoundingClientRect();
+    const topOffset = todoItemRect.bottom + window.scrollY +15;
+    const leftOffset = todoItemRect.left + window.scrollX +23;
+    page.todoContainer.append(page.popUpCalendarEl);
+    showCalendarEl(page.popUpCalendarEl, page.overlayEl);
+    // page.popUpCalendarEl.style.position = 'absolute';
+    page.popUpCalendarEl.style.top = `${topOffset}px`;
+    page.popUpCalendarEl.style.left = `${leftOffset}px`;
+    
+    page.popUpCalendarEl.addEventListener('change', function() {
+      handleDateSelection(event, index, currentTodo);
+    });
+
+  }
+}
+
+
+function handleDateSelection(event, index, currentTodo) {
+  console.log(currentTodo);
+  console.log(event.target);
+  console.log(index)
+    const selectedDate = page.popUpCalendarEl.value;
+    console.log(selectedDate);
+    currentTodo.dueDate = selectedDate;
+    hideCalendarEl(page.popUpCalendarEl);
+    renderTodosInProjectArray(currentProject);
+}
+
+
+
+function showCalendarEl(calendarEl, overlayEl) {
+// console.log(overlayEl);
+  if (calendarEl === null) {
+    return;
+  } else {
+    calendarEl.classList.add("active");
+    overlayEl.classList.add("active");
+    // console.log("overylay clas added");
+    // page.overlayEl.addEventListener('click', hideCalendarEl)
+  }
+}
+
+function hideCalendarEl(calendarEl) {
+  if (calendarEl && calendarEl.classList) {
+    calendarEl.classList.remove('active');
+    // page.overlayEl.classList.remove('active');
+    console.log(projectArray);
+
+  }
+}
+

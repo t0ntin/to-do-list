@@ -334,3 +334,40 @@ input[type="checkbox"] {
   grid-row: 3/4;
   text-align: center;
 }
+
+.popup-calendar {
+  position: fixed;
+  /* top: 50%;
+  left: 50%; */
+  width: 180px;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  z-index: 1;
+
+}
+
+.popup-calendar.active {
+  transform: translate(-50%, -50%) scale(1);
+
+
+}
+
+.overlay {
+  position: fixed;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: red;
+  pointer-events: none;
+  /* z-index: 200; */
+  /* transition: opacity 200ms ease-in-out; */
+
+}
+
+.overlay .active {
+  opacity: 1;
+  pointer-events: all;
+  background-color: white;
+}

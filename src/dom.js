@@ -21,7 +21,19 @@ function myPage() {
   const moveDropDownEl = document.createElement('button');
   moveDropDownEl.classList.add('dropdown-button')
 
-  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, moveDropDownEl};
+  // const dialogEl = document.createElement('dialog');  //added
+  const popUpCalendarEl = document.createElement('input');
+  popUpCalendarEl.type = 'date';
+  popUpCalendarEl.classList.add('popup-calendar');
+
+  // dialogEl.append(popUpCalendarEl);                   //added
+
+  const overlayEl = document.createElement('div');
+  todoContainer.append(overlayEl);
+  overlayEl.classList.add('overlay');    
+
+
+  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, moveDropDownEl, popUpCalendarEl, overlayEl};
 }
 export const page = myPage();
 
