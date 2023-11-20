@@ -167,11 +167,14 @@ function moveTodoItem (event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
   if (currentTodo) {
     if (event.target.classList.contains('todo-move')) {
-        page.todoContainer.append(page.moveDropDownContainer);
+        // page.todoContainer.append(page.moveDropDownContainer);
+        positionElement(event, '+50', '+150', page.todoContainer, page.moveDropDownContainer);
         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
         dropdownArray.forEach((dropdownArrayItem)  => {
           page.moveDropDownEl.innerText = dropdownArrayItem.name;
           page.moveDropDownContainer.append(page.moveDropDownEl);
+
+          showPopupEl(page.moveDropDownContainer);
           page.moveDropDownEl.addEventListener('click', () => {
               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
               console.log(selectedProjectExists);
@@ -188,6 +191,31 @@ function moveTodoItem (event) {
 
 }
 
+// function moveTodoItem (event) {
+//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+//   if (currentTodo) {
+//     if (event.target.classList.contains('todo-move')) {
+//         page.todoContainer.append(page.moveDropDownContainer);
+//         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+//         dropdownArray.forEach((dropdownArrayItem)  => {
+//           page.moveDropDownEl.innerText = dropdownArrayItem.name;
+//           page.moveDropDownContainer.append(page.moveDropDownEl);
+//           page.moveDropDownEl.addEventListener('click', () => {
+//               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
+//               console.log(selectedProjectExists);
+//               if (selectedProjectExists) {
+//                 selectedProjectExists.addItem(currentTodo);
+//                 currentProject.removeItem(currentTodo);
+//                 renderTodosInProjectArray(currentProject);
+//                 console.log(projectArray);
+//               }
+//           })
+//         })
+//     }
+//   }
+
+// }
+
 // page.todoContainer.addEventListener('click', showCalendar);
 
 page.todoContainer.addEventListener('click', function(event) {
@@ -200,14 +228,15 @@ function showCalendar(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
 
   if (todoItem) {
-    const todoItemRect = event.target.getBoundingClientRect();
-    const topOffset = todoItemRect.bottom + window.scrollY +15;
-    const leftOffset = todoItemRect.left + window.scrollX +23;
-    page.todoContainer.append(page.popUpCalendarEl);
-    showCalendarEl(page.popUpCalendarEl, page.overlayEl);
-    // page.popUpCalendarEl.style.position = 'absolute';
-    page.popUpCalendarEl.style.top = `${topOffset}px`;
-    page.popUpCalendarEl.style.left = `${leftOffset}px`;
+    // const todoItemRect = event.target.getBoundingClientRect();
+    // const topOffset = todoItemRect.bottom + window.scrollY +15;
+    // const leftOffset = todoItemRect.left + window.scrollX +23;
+    positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);
+    // page.todoContainer.append(page.popUpCalendarEl);
+    // // page.popUpCalendarEl.style.position = 'absolute';
+    // page.popUpCalendarEl.style.top = `${topOffset}px`;
+    // page.popUpCalendarEl.style.left = `${leftOffset}px`;
+    showPopupEl(page.popUpCalendarEl, page.overlayEl);
     
     page.popUpCalendarEl.addEventListener('change', function() {
       handleDateSelection(event, index, currentTodo);
@@ -215,6 +244,16 @@ function showCalendar(event) {
 
   }
 }
+
+function positionElement(event, scrollY, scrollX, containerEl, element) {
+  const elementRect = event.target.getBoundingClientRect();
+  const topOffset = elementRect.bottom + window.scrollY + parseInt(scrollY);
+  const leftOffset = elementRect.left + window.scrollX + parseInt(scrollX);
+  containerEl.append(element);
+  element.style.top = `${topOffset}px`;
+  element.style.left = `${leftOffset}px`;
+}
+
 
 
 function handleDateSelection(event, index, currentTodo) {
@@ -224,28 +263,28 @@ function handleDateSelection(event, index, currentTodo) {
     const selectedDate = page.popUpCalendarEl.value;
     console.log(selectedDate);
     currentTodo.dueDate = selectedDate;
-    hideCalendarEl(page.popUpCalendarEl);
+    closePopupEl(page.popUpCalendarEl);
     renderTodosInProjectArray(currentProject);
 }
 
 
 
-function showCalendarEl(calendarEl, overlayEl) {
-// console.log(overlayEl);
-  if (calendarEl === null) {
+function showPopupEl(popupEl) {
+  if (popupEl === null) {
     return;
   } else {
-    calendarEl.classList.add("active");
-    overlayEl.classList.add("active");
+    popupEl.classList.add("active");
+    page.overlayEl.classList.add("active");
     // console.log("overylay clas added");
-    // page.overlayEl.addEventListener('click', hideCalendarEl)
+    page.overlayEl.addEventListener('click', closePopupEl)
   }
 }
 
-function hideCalendarEl(calendarEl) {
-  if (calendarEl && calendarEl.classList) {
-    calendarEl.classList.remove('active');
-    // page.overlayEl.classList.remove('active');
+function closePopupEl(popupEl) {
+  // if (popupEl && popupEl.classList) {
+  if (popupEl === null) {
+    popupEl.classList.remove('active');
+    page.overlayEl.classList.remove('active');
     console.log(projectArray);
 
   }

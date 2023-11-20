@@ -341,7 +341,7 @@ input[type="checkbox"] {
   left: 50%; */
   width: 180px;
   transform: translate(-50%, -50%) scale(0);
-  transition: 200ms ease-in-out;
+  transition: 900ms ease-in-out;
   z-index: 1;
 
 }
@@ -359,15 +359,24 @@ input[type="checkbox"] {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: red;
+  background-color: hsla(0, 0%, 0%, 0.5);
   pointer-events: none;
-  /* z-index: 200; */
-  /* transition: opacity 200ms ease-in-out; */
+
 
 }
 
-.overlay .active {
+.overlay.active {
   opacity: 1;
   pointer-events: all;
-  background-color: white;
+}
+
+.dropdown-container {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+}
+
+.dropdown-container.active {
+  transform: translate(-50%, -50%) scale(1);
+
 }
