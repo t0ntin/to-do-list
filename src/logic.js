@@ -168,18 +168,15 @@ function moveTodoItem(event) {
   if (currentTodo) {
     if (event.target.classList.contains('todo-move')) {
       positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
-
       page.moveDropDownContainer.innerHTML = '';
-      // page.moveDropDownContainer.innerText = "Move this todo to:"
-
-      // page.moveDropDownEl.innerText = '';
-
       const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+      const dropdownTitle = document.createElement('div');
+dropdownTitle.innerText = "Move this todo to:";
+page.moveDropDownContainer.appendChild(dropdownTitle);
       dropdownArray.forEach((dropdownArrayItem) => {
         const moveDropdownEl = document.createElement('button');
         moveDropdownEl.innerText = dropdownArrayItem.name;
-          page.moveDropDownContainer.append(moveDropdownEl);
-        
+        page.moveDropDownContainer.append(moveDropdownEl);
         moveDropdownEl.addEventListener('click', () => {
           const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
           if (selectedProjectExists) {
@@ -263,10 +260,10 @@ function moveTodoItem(event) {
 
 
 
-page.todoContainer.addEventListener('click',  (event) => showCalendar(event));
+page.todoContainer.addEventListener('click',  (event) => handleDateClick(event));
 
 
-function showCalendar(event) {
+function handleDateClick(event) {
   console.log(event.target);
   if (event.target.classList.contains('todo-date')) {
     // const dateElement = event.target.classList.contains('todo-date');
@@ -281,6 +278,17 @@ function showCalendar(event) {
       handleDateSelection(index, currentTodo);
     });
   }
+}
+
+function handleDateSelection( index, currentTodo) {
+  console.log(currentTodo);
+  console.log(index)
+    let selectedDate = page.popUpCalendarEl.value;
+    console.log(selectedDate);
+    currentTodo.dueDate = selectedDate;
+    closePopupEl(page.popUpCalendarEl);
+    renderTodosInProjectArray(currentProject);
+}
 
   // const todoItem = event.target.classList.contains('todo-date');
   // if (todoItem) {
@@ -289,21 +297,9 @@ function showCalendar(event) {
     // });
 
   // }
-}
 
-
-function handleDateSelection( index, currentTodo) {
-  console.log(currentTodo);
-  console.log(index)
-    const selectedDate = page.popUpCalendarEl.value;
-    console.log(selectedDate);
-    currentTodo.dueDate = selectedDate;
-    closePopupEl(page.popUpCalendarEl);
-    renderTodosInProjectArray(currentProject);
-}
 
 function showPopupEl(popupEl) {
-  // console.log(popupEl);
   if (popupEl === null) {
     return;
   } else {
@@ -312,6 +308,40 @@ function showPopupEl(popupEl) {
     page.overlayEl.addEventListener('click', () => closePopupEl(popupEl));
   }
 }
+
+function positionElement(event, scrollY, scrollX, containerEl, element) {
+  const elementRect = event.target.getBoundingClientRect();
+  const topOffset = elementRect.bottom + window.scrollY + parseInt(scrollY);
+  const leftOffset = elementRect.left + window.scrollX + parseInt(scrollX);
+  containerEl.append(element);
+  element.style.top = `${topOffset}px`;
+  element.style.left = `${leftOffset}px`;
+}
+
+function closePopupEl(popupEl) {
+  if (popupEl === null) {
+    return;
+  } else {
+    popupEl.classList.remove('active');
+    page.overlayEl.classList.remove('active');
+  }
+}
+
+page.todoContainer.addEventListener('input', (event) => handleTodoUpdate(event));
+
+function handleTodoUpdate(event) {
+  if (event.target.classList.contains('todo-title')) {
+    const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+    if (currentTodo) {
+      console.log(event.target);
+      console.log(event.target.innerText);
+      console.log(currentTodo);
+      currentTodo.todo = event.target.innerText;
+      // Update your UI or perform other actions as needed.
+    }
+  }
+}
+
 
 // THIS CODE WORKED 
 // page.todoContainer.addEventListener('click', (event) => showCalendar(event));
@@ -333,14 +363,6 @@ function showPopupEl(popupEl) {
 
 
 
-function positionElement(event, scrollY, scrollX, containerEl, element) {
-  const elementRect = event.target.getBoundingClientRect();
-  const topOffset = elementRect.bottom + window.scrollY + parseInt(scrollY);
-  const leftOffset = elementRect.left + window.scrollX + parseInt(scrollX);
-  containerEl.append(element);
-  element.style.top = `${topOffset}px`;
-  element.style.left = `${leftOffset}px`;
-}
 
 
 
@@ -369,13 +391,4 @@ function positionElement(event, scrollY, scrollX, containerEl, element) {
 //   }
 // }
 
-function closePopupEl(popupEl) {
-  // if (popupEl && popupEl.classList) {
-  if (popupEl === null) {
-    return;
-  } else {
-    popupEl.classList.remove('active');
-    page.overlayEl.classList.remove('active');
-  }
-}
 
