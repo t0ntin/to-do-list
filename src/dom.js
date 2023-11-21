@@ -4,6 +4,7 @@ import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from 
 
 
 function myPage() {
+  const mainEl = document.querySelector('.main');
   const projectInput = document.querySelector('#project-input');
   const todoInput = document.querySelector('#to-do');
   const dueDateInput = document.querySelector('#date');
@@ -16,10 +17,9 @@ function myPage() {
 
   const moveDropDownContainer = document.createElement('div');
   moveDropDownContainer.classList.add('dropdown-container')
-  moveDropDownContainer.innerText = "Move this todo to:"
   
-  const moveDropDownEl = document.createElement('button');
-  moveDropDownEl.classList.add('dropdown-button')
+  // const moveDropDownEl = document.createElement('button');
+  // moveDropDownEl.classList.add('dropdown-button')
 
   // const dialogEl = document.createElement('dialog');  //added
   const popUpCalendarEl = document.createElement('input');
@@ -29,11 +29,13 @@ function myPage() {
   // dialogEl.append(popUpCalendarEl);                   //added
 
   const overlayEl = document.createElement('div');
-  todoContainer.append(overlayEl);
-  overlayEl.classList.add('overlay');    
+  // const overlayEl = document.querySelector('#overlay');
+  overlayEl.setAttribute('id', 'overlay');    
+  mainEl.append(overlayEl);
+  // overlayEl.classList.add('overlay');    
 
 
-  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, moveDropDownEl, popUpCalendarEl, overlayEl};
+  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl};
 }
 export const page = myPage();
 

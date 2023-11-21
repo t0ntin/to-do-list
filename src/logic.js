@@ -163,43 +163,81 @@ page.todoContainer.addEventListener('click', function(event) {
 
 page.todoContainer.addEventListener('click', moveTodoItem);
 
-function moveTodoItem (event) {
+function moveTodoItem(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
   if (currentTodo) {
     if (event.target.classList.contains('todo-move')) {
-        // page.todoContainer.append(page.moveDropDownContainer);
-        positionElement(event, '+50', '+150', page.todoContainer, page.moveDropDownContainer);
-        const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
-        dropdownArray.forEach((dropdownArrayItem)  => {
-          page.moveDropDownEl.innerText = dropdownArrayItem.name;
-          page.moveDropDownContainer.append(page.moveDropDownEl);
+      positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
 
-          showPopupEl(page.moveDropDownContainer);
-          page.moveDropDownEl.addEventListener('click', () => {
-              const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
-              console.log(selectedProjectExists);
-              if (selectedProjectExists) {
-                selectedProjectExists.addItem(currentTodo);
-                currentProject.removeItem(currentTodo);
-                renderTodosInProjectArray(currentProject);
-                console.log(projectArray);
-              }
-          })
-        })
+      page.moveDropDownContainer.innerHTML = '';
+      // page.moveDropDownContainer.innerText = "Move this todo to:"
+
+      // page.moveDropDownEl.innerText = '';
+
+      const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+      dropdownArray.forEach((dropdownArrayItem) => {
+        const moveDropdownEl = document.createElement('button');
+        moveDropdownEl.innerText = dropdownArrayItem.name;
+          page.moveDropDownContainer.append(moveDropdownEl);
+        
+        moveDropdownEl.addEventListener('click', () => {
+          const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
+          if (selectedProjectExists) {
+            selectedProjectExists.addItem(currentTodo);
+            currentProject.removeItem(currentTodo);
+            closePopupEl(page.moveDropDownContainer);
+            renderTodosInProjectArray(currentProject);
+          }
+        });
+      });
+
+      showPopupEl(page.moveDropDownContainer);
     }
   }
-
 }
+
+
+// function moveTodoItem (event) {
+//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+//   if (currentTodo) {
+//     const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+//     if (event.target.classList.contains('todo-move')) {
+//         // page.todoContainer.append(page.moveDropDownContainer);
+//         positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
+//         dropdownArray.forEach((dropdownArrayItem)  => {
+//           page.moveDropDownEl.innerText = dropdownArrayItem.name;
+//           page.moveDropDownContainer.append(page.moveDropDownEl);
+
+//         })
+//         showPopupEl(page.moveDropDownContainer);
+//         page.moveDropDownEl.addEventListener('click', () => {
+//             const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
+//             console.log(selectedProjectExists);
+//             if (selectedProjectExists) {
+//               selectedProjectExists.addItem(currentTodo);
+//               currentProject.removeItem(currentTodo);
+//               renderTodosInProjectArray(currentProject);
+//               console.log(projectArray);
+//             }
+//         })
+//       }
+//   }
+
+// }
+
 
 // function moveTodoItem (event) {
 //   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
 //   if (currentTodo) {
 //     if (event.target.classList.contains('todo-move')) {
-//         page.todoContainer.append(page.moveDropDownContainer);
+//         // page.todoContainer.append(page.moveDropDownContainer);
+//         positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
 //         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
 //         dropdownArray.forEach((dropdownArrayItem)  => {
 //           page.moveDropDownEl.innerText = dropdownArrayItem.name;
 //           page.moveDropDownContainer.append(page.moveDropDownEl);
+
+//           showPopupEl(page.moveDropDownContainer);
 //           page.moveDropDownEl.addEventListener('click', () => {
 //               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
 //               console.log(selectedProjectExists);
@@ -218,32 +256,82 @@ function moveTodoItem (event) {
 
 // page.todoContainer.addEventListener('click', showCalendar);
 
-page.todoContainer.addEventListener('click', function(event) {
-  showCalendar(event);
-});
+// page.todoContainer.addEventListener('click', function(event) {
+//   showCalendar(event);
+// });
+
+
+
+
+page.todoContainer.addEventListener('click',  (event) => showCalendar(event));
+
 
 function showCalendar(event) {
-
-  const todoItem = event.target.classList.contains('todo-date');
-  const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-
-  if (todoItem) {
-    // const todoItemRect = event.target.getBoundingClientRect();
-    // const topOffset = todoItemRect.bottom + window.scrollY +15;
-    // const leftOffset = todoItemRect.left + window.scrollX +23;
-    positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);
-    // page.todoContainer.append(page.popUpCalendarEl);
-    // // page.popUpCalendarEl.style.position = 'absolute';
-    // page.popUpCalendarEl.style.top = `${topOffset}px`;
-    // page.popUpCalendarEl.style.left = `${leftOffset}px`;
-    showPopupEl(page.popUpCalendarEl, page.overlayEl);
-    
-    page.popUpCalendarEl.addEventListener('change', function() {
-      handleDateSelection(event, index, currentTodo);
+  console.log(event.target);
+  if (event.target.classList.contains('todo-date')) {
+    // const dateElement = event.target.classList.contains('todo-date');
+    const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+    console.log(currentTodo);
+    console.log(index)
+  console.log(event.target);
+  
+    showPopupEl(page.popUpCalendarEl);
+    positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);  
+    page.popUpCalendarEl.addEventListener('change',  function() {
+      handleDateSelection(index, currentTodo);
     });
+  }
 
+  // const todoItem = event.target.classList.contains('todo-date');
+  // if (todoItem) {
+    // page.popUpCalendarEl.addEventListener('change', function() {
+    //   handleDateSelection(event, index, currentTodo);
+    // });
+
+  // }
+}
+
+
+function handleDateSelection( index, currentTodo) {
+  console.log(currentTodo);
+  console.log(index)
+    const selectedDate = page.popUpCalendarEl.value;
+    console.log(selectedDate);
+    currentTodo.dueDate = selectedDate;
+    closePopupEl(page.popUpCalendarEl);
+    renderTodosInProjectArray(currentProject);
+}
+
+function showPopupEl(popupEl) {
+  // console.log(popupEl);
+  if (popupEl === null) {
+    return;
+  } else {
+    popupEl.classList.add("active");
+    page.overlayEl.classList.add("active");
+    page.overlayEl.addEventListener('click', () => closePopupEl(popupEl));
   }
 }
+
+// THIS CODE WORKED 
+// page.todoContainer.addEventListener('click', (event) => showCalendar(event));
+
+// function showCalendar(event) {
+
+//   const todoItem = event.target.classList.contains('todo-date');
+//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+//   // showPopupEl(page.popUpCalendarEl, page.overlayEl);
+//   if (todoItem) {
+//     positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);  
+//     page.popUpCalendarEl.addEventListener('change', function() {
+//       handleDateSelection(event, index, currentTodo);
+//     });
+
+//   }
+// }
+
+
+
 
 function positionElement(event, scrollY, scrollX, containerEl, element) {
   const elementRect = event.target.getBoundingClientRect();
@@ -256,37 +344,38 @@ function positionElement(event, scrollY, scrollX, containerEl, element) {
 
 
 
-function handleDateSelection(event, index, currentTodo) {
-  console.log(currentTodo);
-  console.log(event.target);
-  console.log(index)
-    const selectedDate = page.popUpCalendarEl.value;
-    console.log(selectedDate);
-    currentTodo.dueDate = selectedDate;
-    closePopupEl(page.popUpCalendarEl);
-    renderTodosInProjectArray(currentProject);
-}
+// function handleDateSelection(event, index, currentTodo) {
+//   console.log(currentTodo);
+//   console.log(event.target);
+//   console.log(index)
+//     const selectedDate = page.popUpCalendarEl.value;
+//     console.log(selectedDate);
+//     currentTodo.dueDate = selectedDate;
+//     closePopupEl(page.popUpCalendarEl);
+//     renderTodosInProjectArray(currentProject);
+// }
 
 
 
-function showPopupEl(popupEl) {
-  if (popupEl === null) {
-    return;
-  } else {
-    popupEl.classList.add("active");
-    page.overlayEl.classList.add("active");
-    // console.log("overylay clas added");
-    page.overlayEl.addEventListener('click', closePopupEl)
-  }
-}
+
+
+// function showPopupEl(popupEl) {
+//   if (popupEl === null) {
+//     return;
+//   } else {
+//     popupEl.classList.add("active");
+//     page.overlayEl.classList.add("active");
+//     page.overlayEl.addEventListener('click', () => closePopupEl(popupEl));
+//   }
+// }
 
 function closePopupEl(popupEl) {
   // if (popupEl && popupEl.classList) {
   if (popupEl === null) {
+    return;
+  } else {
     popupEl.classList.remove('active');
     page.overlayEl.classList.remove('active');
-    console.log(projectArray);
-
   }
 }
 
