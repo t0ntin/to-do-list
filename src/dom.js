@@ -1,5 +1,6 @@
 
 import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from './logic';
+import trashImage from "./images/delete.svg";
 
 
 
@@ -8,7 +9,7 @@ function myPage() {
   const projectInput = document.querySelector('#project-input');
   const todoInput = document.querySelector('#to-do');
   const dueDateInput = document.querySelector('#date');
-  const descriptionInput = document.querySelector('#description');
+  // const descriptionInput = document.querySelector('#description');
   // priorityContainer IS INSIDE THE MODAL, NOT INSIDE THE TODOS.
   const priorityContainer = document.querySelector('.priority-container');
   const createTodoButton = document.querySelector("#create-todo-btn");
@@ -35,7 +36,7 @@ function myPage() {
   // overlayEl.classList.add('overlay');    
 
 
-  return {projectInput, todoInput, dueDateInput, descriptionInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl};
+  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl};
 }
 export const page = myPage();
 
@@ -57,11 +58,11 @@ class Project {
 }
 
 export class Todo {
-  constructor(todo, dueDate, priority, description) {
+  constructor(todo, dueDate, priority) {
     this.todo = todo;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.description = description;
+    // this.description = description;
     this.isDone = false;
   }
 }
@@ -106,8 +107,6 @@ export function renderProjectList() {
     page.bottomControlsCont.append(projectEl);
   }
 }
-
-
 export function renderTodosInProjectArray(projectNameOrObject) {
   page.todoContainer.innerHTML = '';
   let project;
@@ -128,31 +127,72 @@ export function renderTodosInProjectArray(projectNameOrObject) {
         const formattedDate = formatTodoDate(todoItem.dueDate);
         todoUl.innerHTML = `
         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
-        <li class="todo-description ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.description}</li>
         <li class="todo-date">${formattedDate}</li>
         <li class="todo-priority">${todoItem.priority}</li>
         <li class="todo-delete"></li>
-        <li class="todo-move">Move</li>
+        <li class="todo-move">Move to:</li>
         <li class="todo-done">Done</li>
         `;
         setPriorityStyles(todoItem, todoUl);
-        const deleteButton = createDeleteButton(todoItem, todoUl, currentProject);
+        const deleteButton = createDeleteButton(todoItem, todoUl, currentProject)
         todoUl.querySelector('.todo-delete').appendChild(deleteButton);
         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
         page.todoContainer.append(todoUl);
       }
     } else {
-      console.log(project); // This will log the project object
+      console.log(project);
     }
 }
 
-export function createDeleteButton(todo, todoUl, currentProject) {
-  const deleteButton = document.createElement('button');
-  deleteButton.innerText = 'Delete';
-  deleteButton.addEventListener('click', () => {
+// export function renderTodosInProjectArray(projectNameOrObject) {
+//   page.todoContainer.innerHTML = '';
+//   let project;
+
+//   if (typeof projectNameOrObject === 'string') {
+//     project = projectArray.find((p) => p.name === projectNameOrObject);
+//   } else if (typeof projectNameOrObject === 'object') {
+//     project = projectNameOrObject;
+//   } else {
+//     console.error(`Invalid project argument: ${projectNameOrObject}`);
+//     return;
+//   }
+//     if (project) {
+//       for (const todoItem of project.projectItems) {
+
+//         const todoUl = document.createElement('ul');
+//         todoUl.classList.add('todo-item');
+//         const formattedDate = formatTodoDate(todoItem.dueDate);
+//         todoUl.innerHTML = `
+//         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
+//         <li class="todo-date">${formattedDate}</li>
+//         <li class="todo-priority">${todoItem.priority}</li>
+//         <li class="todo-delete"></li>
+//         <li class="todo-move">Move to:</li>
+//         <li class="todo-done">Done</li>
+//         `;
+//         setPriorityStyles(todoItem, todoUl);
+//         const deleteButton = createDeleteButton(todoItem, todoUl, currentProject);
+//         todoUl.querySelector('.todo-delete').appendChild(deleteButton);
+//         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
+//         page.todoContainer.append(todoUl);
+//       }
+//     } else {
+//       console.log(project); // This will log the project object
+//     }
+// }
+
+function createDeleteButton(todo, todoUl, currentProject) {
+  const deleteButtonEl = document.createElement('li');
+  todoUl.append(deleteButtonEl);
+  deleteButtonEl.classList.add('todo-delete');
+  const trashSVG = new Image();
+  trashSVG.src = trashImage;
+  deleteButtonEl.append(trashSVG);
+  trashSVG.classList.add("trash-svg");
+  deleteButtonEl.addEventListener('click', () => {
     currentProject.removeItem(todo);
     todoUl.remove();
     console.log(projectArray);
   });
-  return deleteButton;
+  return deleteButtonEl;
 }

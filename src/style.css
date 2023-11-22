@@ -12,16 +12,21 @@
 
 :root {
   --BACKGROUND-COLOR: rgba(0, 0, 0, 0.92);
-  --SECONDARY-BG-COLOR: #262837;
+  /* --SECONDARY-BG-COLOR: #262837; */
+  --SECONDARY-BG-COLOR: #2C3333;
   --PLACEHOLDER-COLOR: rgb(155, 155, 155);
-  --TEXT-COLOR: white;
+  --MAIN-TEXT-COLOR: #EEEEEE;
+  --BUTTON-BACKGROUND-COLOR: #1C82AD;
+  --GREEN-ACCENT: #03C988;
+  --BUTTON-BACKGROUND-HOVER: #2E4F4F;
+  --BUTTON-BACKGROUND-ACTIVE: #00337C;
   --HIGH-PRIORITY: #ff5b22;
   --HIGH-PRIORITY: #ff5b22;
   --HIGH-PRIORITY: #ff5b22;
 }
 
 body {
-  color: white;
+  color: var(--MAIN-TEXT-COLOR);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -205,7 +210,7 @@ input[type="checkbox"] {
 }
 
 /* textarea field */
-#description {
+/* #description {
   height: 50px;
   width: 100%;
   background-color: var(--SECONDARY-BG-COLOR);
@@ -215,7 +220,7 @@ input[type="checkbox"] {
   border: 0;
   border-radius: 5px;
   padding: 8px 20px 8px;
-}
+} */
 
 .error-msg-container {
   height: 1rem;
@@ -253,37 +258,61 @@ input[type="checkbox"] {
 .todo-item {
   /* display: flex;
   justify-content: space-between; */
-  border: 1px solid white;
+  /* background-color: var(--SECONDARY-BG-COLOR); */
+  background: rgb(44,51,51);
+  background: linear-gradient(153deg, rgba(44,51,51,1) 0%, rgba(44,51,51,1) 35%, rgba(35,17,103,1) 92%);
+  /* box-shadow: inset 5px 5px 10px #003f4a, inset -5px -5px 10px #005564; */
+  /* border-radius: 3px; */
+  /* border: 1px solid rgba(109, 255, 4, 0.883); */
   width: 390px;
-  height: 105px;
+  height: 80px;
   margin: 5px 3px 5px 3px;
   display: grid;
   grid-template-columns: 1fr minmax(auto, auto) minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, auto);
-  grid-template-rows: minmax(auto, auto) minmax(auto, 26px) 26px;
+  /* grid-template-rows: minmax(auto, auto) minmax(auto, 26px) 26px; */
+  grid-template-rows: minmax(auto, 60px) 30px;
   gap: 2px;
-  
+  justify-content: center;
+  align-content: space-between;
+  align-items: start;
+  justify-items: normal;
 }
  
 .todo-item li {
-  border: 1px solid white;
+  /* border: 1px solid white; */
   padding: 3px;
+  border-radius: 3px;
+  /* background-color: var(--BUTTON-BACKGROUND-COLOR); */
+}
+
+
+.todo-move {
+
 }
 
 .todo-title {
   overflow: auto;
-  background-color: gray;
+  /* background-color: gray; */
   grid-column: 1/6;
   grid-row: 1/2;
   text-decoration: none;
+  /* overflow: scroll; */
+  height: 45px;
+
+}
+.todo-title:focus {
+  /* border: 1px solid var(--GREEN-ACCENT); */
+  background-color:rgba(140, 0, 0, 0.41) ;
+  outline: none;
 }
 
-.todo-description {
+/* .todo-description {
   overflow: auto;
   background-color: rgb(192, 190, 190);
   grid-column: 1/6;
   grid-row: 2/3;
   
-}
+} */
 
 .todo-marked-as-done {
   background-color: rgb(182, 5, 5);
@@ -293,13 +322,13 @@ input[type="checkbox"] {
 .todo-date {
   background-color: rgba(255, 0, 0, 0.418);
   grid-column: 3/4;
-  grid-row: 3/4;
+  grid-row: 2/3;
   text-align: center;
 }
 
 .todo-priority {
   grid-column: 4/5;
-  grid-row: 3/4;
+  grid-row: 2/3;
   text-align: center;
 }
 
@@ -313,26 +342,40 @@ input[type="checkbox"] {
 }
 
 .todo-priority-low {
-  background-color: rgb(2, 84, 2); 
+  background-color: rgba(2, 84, 2, 0.778); 
 }
 
 .todo-delete {
   grid-column: 5/6;
-  grid-row: 3/4;
+  grid-row: 2/3;
   text-align: center;
+}
+
+.delete-button {
+  /* background-color: rgb(201, 0, 0);
+  background: url('images/delete.svg') no-repeat center center;
+  fill: green; */
 }
 
 .todo-move {
   grid-column: 1/2;
-  grid-row: 3/4;
+  grid-row: 2/3;
   text-align: center;
   background-color: rgb(5, 91, 131);
 }
 
 .todo-done {
   grid-column: 2/3;
-  grid-row: 3/4;
+  grid-row: 2/3;
   text-align: center;
+  background-color: rgb(5, 91, 131);
+
+}
+
+.trash-svg {
+  filter: invert(13%) sepia(81%) saturate(7478%) hue-rotate(7deg) brightness(92%) contrast(114%);
+  width: 18px;
+  cursor: pointer;
 }
 
 .popup-calendar {
@@ -369,6 +412,7 @@ input[type="checkbox"] {
   position: absolute;
   transform: translate(-50%, -50%) scale(0);
   transition: 200ms ease-in-out;
+  border-radius: 10px;
   background-color: var(--BACKGROUND-COLOR);
   display: flex;
   flex-direction: column;
@@ -380,4 +424,21 @@ input[type="checkbox"] {
 .dropdown-container.active {
   transform: translate(-50%, -50%) scale(1.2);
 
+}
+.move-dropdown-item-el {
+  background-color: var(--BUTTON-BACKGROUND-COLOR);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 3px;
+  margin-top: 4px;
+}
+
+.move-dropdown-item-el:hover {
+  background: var(--BUTTON-BACKGROUND-HOVER);
+}
+
+.move-dropdown-item-el:active {
+  color: var(--BUTTON-BACKGROUND-HOVER);
+  text-shadow: 1px 1px 1px white;
 }

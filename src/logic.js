@@ -106,7 +106,7 @@ export function determineProject(priority) {
   const untitledProjectExists = projectArray.find((project) => project.name === 'Untitled Project');
   let userInputProjectName = page.projectInput.value;
   const existingProject = projectArray.find((project) => project.name === userInputProjectName);
-  const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority, page.descriptionInput.value);
+  const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority);
   if (userInputProjectName && existingProject) {
     pushTodoToExistingProject(newToDo,existingProject);
     renderProjectList();
@@ -138,16 +138,16 @@ function markAsDone(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
     if (currentTodo) {
       const todoUl = page.todoContainer.children[index];
-      const descriptionLi = todoUl.querySelector('.todo-description');
+      // const descriptionLi = todoUl.querySelector('.todo-description');
       const todoTitleLi = todoUl.querySelector('.todo-title');
 
       if (!currentTodo.isDone) {
         todoTitleLi.classList.add('todo-marked-as-done');
-        descriptionLi.classList.add('todo-marked-as-done');
+        // descriptionLi.classList.add('todo-marked-as-done');
         currentTodo.isDone = true;
       } else {
         todoTitleLi.classList.remove('todo-marked-as-done');
-        descriptionLi.classList.remove('todo-marked-as-done');
+        // descriptionLi.classList.remove('todo-marked-as-done');
         currentTodo.isDone = false;
       }
       console.log('marked as done');
@@ -174,10 +174,11 @@ function moveTodoItem(event) {
 dropdownTitle.innerText = "Move this todo to:";
 page.moveDropDownContainer.appendChild(dropdownTitle);
       dropdownArray.forEach((dropdownArrayItem) => {
-        const moveDropdownEl = document.createElement('button');
-        moveDropdownEl.innerText = dropdownArrayItem.name;
-        page.moveDropDownContainer.append(moveDropdownEl);
-        moveDropdownEl.addEventListener('click', () => {
+        const moveDropdownItemEl = document.createElement('button');
+        moveDropdownItemEl.innerText = dropdownArrayItem.name;
+        moveDropdownItemEl.classList.add('move-dropdown-item-el');
+        page.moveDropDownContainer.append(moveDropdownItemEl);
+        moveDropdownItemEl.addEventListener('click', () => {
           const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
           if (selectedProjectExists) {
             selectedProjectExists.addItem(currentTodo);
@@ -332,13 +333,7 @@ page.todoContainer.addEventListener('input', (event) => handleTodoUpdate(event))
 function handleTodoUpdate(event) {
   if (event.target.classList.contains('todo-title')) {
     const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-    if (currentTodo) {
-      console.log(event.target);
-      console.log(event.target.innerText);
-      console.log(currentTodo);
       currentTodo.todo = event.target.innerText;
-      // Update your UI or perform other actions as needed.
-    }
   }
 }
 
