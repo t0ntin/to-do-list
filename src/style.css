@@ -19,15 +19,23 @@
   --BUTTON-BACKGROUND-COLOR: #039be75b;
   --BUTTON-BACKGROUND-HOVER: #1f7373f1;
   --BUTTON-BACKGROUND-ACTIVE: #00337C;
+  --PROJECT-BUTTON-BACKGROUND-COLOR:#4d31aae8;
   --GREEN-ACCENT: #03C988;
   --HIGH-PRIORITY: #ff5b22;
   --HIGH-PRIORITY: #ff5b22;
   --HIGH-PRIORITY: #ff5b22;
 }
 
+@font-face {
+  font-family: "Akronym";
+  src: url("/src/Akronim.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   color: var(--MAIN-TEXT-COLOR);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: monospace;
 }
 
 input,
@@ -73,12 +81,14 @@ img {
   align-items: center;
 }
 .page-title-container {
-  border: 1px solid rgb(255, 255, 255);
   display: flex;
   justify-content: center;
 }
 
 .title {
+  font-family: 'Akronym';
+  font-size: 2.5rem;
+  font-weight: normal;
 }
 
 .bottom-controls {
@@ -99,7 +109,7 @@ form {
   background-color: var(--BACKGROUND-COLOR);
   border-radius: 20px;
   width: 320px;
-  padding: 20px;
+  padding: 5px 10px;
   box-shadow: 2px 2px 6px 1px rgb(163, 163, 163);
 }
 
@@ -112,7 +122,7 @@ input {
   background-color: var(--SECONDARY-BG-COLOR);
   border-radius: 12px;
   border: 0;
-  color: var(--TEXT-COLOR);
+  color: var(--MAIN-TEXT-COLOR);
   outline: none;
   padding: 8px 20px 8px;
   width: 100%;
@@ -209,19 +219,6 @@ input[type="checkbox"] {
   transform: scale(1.5);
 }
 
-/* textarea field */
-/* #description {
-  height: 50px;
-  width: 100%;
-  background-color: var(--SECONDARY-BG-COLOR);
-  resize: none;
-  color: var(--PLACEHOLDER-COLOR);
-  outline: none;
-  border: 0;
-  border-radius: 5px;
-  padding: 8px 20px 8px;
-} */
-
 .error-msg-container {
   height: 1rem;
   color: rgb(255, 15, 15);
@@ -267,9 +264,9 @@ input[type="checkbox"] {
   /* box-shadow: inset 5px 5px 10px #003f4a, inset -5px -5px 10px #005564; */
   /* border-radius: 3px; */
   /* border: 1px solid rgba(109, 255, 4, 0.883); */
-  width: 390px;
+  width: 359px;
   height: 80px;
-  margin: 5px 3px 5px 3px;
+  margin: 10px 0px 10px 0px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr minmax(auto, 30px) ;
   /* grid-template-columns: 1fr minmax(auto, auto) minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, auto); */
@@ -299,16 +296,22 @@ input[type="checkbox"] {
   /* background-color: gray; */
   grid-column: 1/6;
   grid-row: 1/2;
-  text-decoration: none;
   /* overflow: scroll; */
   height: 45px;
-
+  padding: 20px;
 }
 
 .todo-title:focus {
   /* border: 1px solid var(--GREEN-ACCENT); */
   background-color:rgba(140, 0, 0, 0.41) ;
   outline: none;
+}
+
+.todo-title-text {
+  padding: 3px 3px 3px 5px;
+  display: inline-block;
+  text-decoration: none;
+
 }
 
 .todo-marked-as-done {
@@ -331,6 +334,12 @@ input[type="checkbox"] {
   grid-row: 2/3;
   text-align: center;
   transition: margin 0.2s;
+  cursor: pointer;
+}
+
+.todo-priority:hover {
+  filter: brightness(140%);
+
 }
 
 .todo-priority-high {
@@ -360,8 +369,13 @@ input[type="checkbox"] {
   grid-column: 1/2;
   grid-row: 2/3;
   text-align: center;
-  background-color: var(--BUTTON-BACKGROUND-COLOR);
+  background-color: var(--PROJECT-BUTTON-BACKGROUND-COLOR);
   transition: margin 0.1s;
+}
+
+.todo-move:hover {
+  cursor: pointer;
+  filter: brightness(140%);
 }
 
 .todo-done {
@@ -381,9 +395,9 @@ input[type="checkbox"] {
   box-shadow: 3px 3px 10px rgb(134, 254, 70);
   border-bottom: 1px solid rgb(200, 255, 170);
 
-}
+} 
 
-.todo-move:hover, .todo-done:hover, .todo-priority:hover, .todo-date:hover {
+.todo-done:hover, .todo-date:hover {
   cursor: pointer;
   background: var(--BUTTON-BACKGROUND-HOVER);
 }
@@ -410,7 +424,7 @@ input[type="checkbox"] {
 }
 
 .check-mark-svg {
-  width: 20px;
+  width: 16px;
   filter: invert(55%) sepia(89%) saturate(1071%) hue-rotate(115deg) brightness(92%) contrast(98%);
 }
 
@@ -466,11 +480,11 @@ input[type="checkbox"] {
 
 .dropdown-container.active {
   transform: translate(-50%, -50%) scale(1.2);
-
 }
+
 .move-dropdown-item-el {
   background-color: var(--BUTTON-BACKGROUND-COLOR);
-  /* color: white; */
+  color: var(--MAIN-TEXT-COLOR);
   border: none;
   border-radius: 5px;
   padding: 3px;
@@ -484,4 +498,27 @@ input[type="checkbox"] {
 .move-dropdown-item-el:active {
   color: var(--BUTTON-BACKGROUND-HOVER);
   text-shadow: 1px 1px 1px white;
+}
+
+.project-list-container {
+  padding: 5px;
+  width: 250px;
+  overflow: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 5px;
+
+}
+
+.project-name-element {
+  background-color: var(--PROJECT-BUTTON-BACKGROUND-COLOR);
+  padding: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.current-project-styles {
+  font-weight: bold;
+  border-left:  thick double white;
 }

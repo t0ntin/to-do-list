@@ -130,7 +130,6 @@ export function determineProject(priority) {
     togglePriority(page.todoContainer);
     renderTodosInProjectArray("Untitled Project");
   }
-  
 }
 
 function markAsDone(event) {
@@ -138,14 +137,14 @@ function markAsDone(event) {
     if (currentTodo) {
       const todoUl = page.todoContainer.children[index];
       // const descriptionLi = todoUl.querySelector('.todo-description');
-      const todoTitleLi = todoUl.querySelector('.todo-title');
+      const todoTitleSpan = todoUl.querySelector('.todo-title-text');
 
       if (!currentTodo.isDone) {
-        todoTitleLi.classList.add('todo-marked-as-done');
+        todoTitleSpan.classList.add('todo-marked-as-done');
         // descriptionLi.classList.add('todo-marked-as-done');
         currentTodo.isDone = true;
       } else {
-        todoTitleLi.classList.remove('todo-marked-as-done');
+        todoTitleSpan.classList.remove('todo-marked-as-done');
         // descriptionLi.classList.remove('todo-marked-as-done');
         currentTodo.isDone = false;
       }
@@ -335,6 +334,7 @@ function handleTodoUpdate(event) {
       currentTodo.todo = event.target.innerText;
   }
 }
+
 
 
 // THIS CODE WORKED 

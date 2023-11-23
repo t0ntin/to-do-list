@@ -3,8 +3,6 @@ import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from 
 import trashImage from "./images/delete.svg";
 import checkMarkImage from "./images/check.svg";
 
-
-
 function myPage() {
   const mainEl = document.querySelector('.main');
   const projectInput = document.querySelector('#project-input');
@@ -92,21 +90,45 @@ export function submitToTodoContainer () {
   page.createTodoButton.addEventListener('click', (e)=> {
   e.preventDefault();
     determineProject(priority);
+    styleCurrentProjectonProjectList();
   });
+}
+
+function makeElement(elementTag, className, appendToEl) {
+  const element = document.createElement(elementTag);
+  element.classList.add(className);
+  if (appendToEl) {
+    appendToEl.append(element);
+  } 
+  return element;
 }
 
 export function renderProjectList() {
   page.bottomControlsCont.innerHTML = '';
+  const projListContainer = makeElement('div', 'project-list-container', page.bottomControlsCont)
   for (const project of projectArray) {
-    const projectEl = document.createElement('li');
+    const projectEl = makeElement('li', 'project-name-element', projListContainer);
+    // projectEl.setAttribute('id', project.indexOf(projectEl));
     projectEl.innerText = project.name;
     projectEl.addEventListener('click', () => {
       renderTodosInProjectArray(project);
       currentProject = project;
-      console.log(project);
+    styleCurrentProjectonProjectList();
     })
-    page.bottomControlsCont.append(projectEl);
   }
+
+}
+
+function styleCurrentProjectonProjectList(params) {
+  const currentProjectName = currentProject.name;
+  const projectListContainer = document.querySelector('.project-list-container');
+    const projectListItems = Array.from(projectListContainer.children);
+    for (const projectListItem of projectListItems) {
+        projectListItem.classList.remove('current-project-styles');
+      if (projectListItem.innerText === currentProjectName) {
+        projectListItem.classList.add('current-project-styles');
+      }
+    }
 }
 
 export function renderTodosInProjectArray(projectNameOrObject) {
@@ -128,7 +150,7 @@ export function renderTodosInProjectArray(projectNameOrObject) {
         todoUl.classList.add('todo-item');
         const formattedDate = formatTodoDate(todoItem.dueDate);
         todoUl.innerHTML = `
-        <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
+        <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true"><span class="todo-title-text">${todoItem.todo}</li>
         <li class="todo-date">${formattedDate}</li>
         <li class="todo-priority">${todoItem.priority}</li>
 
@@ -145,47 +167,9 @@ export function renderTodosInProjectArray(projectNameOrObject) {
     }
 }
 
-// export function renderTodosInProjectArray(projectNameOrObject) {
-//   page.todoContainer.innerHTML = '';
-//   let project;
-
-//   if (typeof projectNameOrObject === 'string') {
-//     project = projectArray.find((p) => p.name === projectNameOrObject);
-//   } else if (typeof projectNameOrObject === 'object') {
-//     project = projectNameOrObject;
-//   } else {
-//     console.error(`Invalid project argument: ${projectNameOrObject}`);
-//     return;
-//   }
-//     if (project) {
-//       for (const todoItem of project.projectItems) {
-
-//         const todoUl = document.createElement('ul');
-//         todoUl.classList.add('todo-item');
-//         const formattedDate = formatTodoDate(todoItem.dueDate);
-//         todoUl.innerHTML = `
-//         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
-//         <li class="todo-date">${formattedDate}</li>
-//         <li class="todo-priority">${todoItem.priority}</li>
-//         <li class="todo-delete"></li>
-//         <li class="todo-move">Move to:</li>
-//         <li class="todo-done">Done</li>
-//         `;
-//         setPriorityStyles(todoItem, todoUl);
-//         const deleteButton = createDeleteButton(todoItem, todoUl, currentProject);
-//         todoUl.querySelector('.todo-delete').appendChild(deleteButton);
-//         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
-//         page.todoContainer.append(todoUl);
-//       }
-//     } else {
-//       console.log(project); // This will log the project object
-//     }
-// }
 
 function createDeleteButton(todo, todoUl, currentProject) {
-  const deleteButtonEl = document.createElement('li');
-  deleteButtonEl.classList.add('todo-delete');
-  todoUl.append(deleteButtonEl);
+  const deleteButtonEl = makeElement('li', 'todo-delete', todoUl)
   const trashSVG = new Image();
   trashSVG.src = trashImage;
   deleteButtonEl.append(trashSVG);
@@ -200,28 +184,9 @@ function createDeleteButton(todo, todoUl, currentProject) {
 
 
 
-// function createDoneButton (todoUl) {
-//   const doneButtonEl = document.createElement('li');
-//   doneButtonEl.classList.add('todo-done');
-//   todoUl.append(doneButtonEl);
-//   const checkMark = new Image();
-//   checkMark.src = checkMarkImage;
-//   doneButtonEl.append(checkMark)
-//   console.log(checkMarkImage);
-
-//   checkMark.classList.add("check-mark-svg");
-//   doneButtonEl.innerText = "Done";
-//   return doneButtonEl;
-
-
-// }
-
 // For some reason, the image wasn't appending, and I had to add this "onload" check.
 function createDoneButton(todoUl) {
-  const doneButtonEl = document.createElement('li');
-  doneButtonEl.classList.add('todo-done');
-  todoUl.append(doneButtonEl);
-  
+  const doneButtonEl = makeElement('li', 'todo-done', todoUl)
   const checkMark = new Image();
   checkMark.onload = function() {
     doneButtonEl.append(checkMark);
@@ -232,5 +197,4 @@ function createDoneButton(todoUl) {
   
   return doneButtonEl;
 }
-
 
