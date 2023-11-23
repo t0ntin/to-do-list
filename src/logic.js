@@ -55,7 +55,6 @@ page.todoContainer.addEventListener('click', togglePriority);
 
 
 export function togglePriority(e) {
-  // console.log('togglePriority triggered');
   if (e.target) {
     const priorityEl = e.target.closest('.todo-priority');
     if (priorityEl) {
@@ -155,7 +154,7 @@ function markAsDone(event) {
 }
 
 page.todoContainer.addEventListener('click', function(event) {
-  if (event.target.classList.contains('todo-done')) {
+  if (event.target.classList.contains('todo-done') || event.target.classList.contains('check-mark-svg')) {
     markAsDone(event);
   }
 });
@@ -167,7 +166,7 @@ function moveTodoItem(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
   if (currentTodo) {
     if (event.target.classList.contains('todo-move')) {
-      positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
+      positionElement(event, '+58', '+100', page.todoContainer, page.moveDropDownContainer);
       page.moveDropDownContainer.innerHTML = '';
       const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
       const dropdownTitle = document.createElement('div');

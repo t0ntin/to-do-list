@@ -1,6 +1,7 @@
 
 import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from './logic';
 import trashImage from "./images/delete.svg";
+import checkMarkImage from "./images/check.svg";
 
 
 
@@ -107,6 +108,7 @@ export function renderProjectList() {
     page.bottomControlsCont.append(projectEl);
   }
 }
+
 export function renderTodosInProjectArray(projectNameOrObject) {
   page.todoContainer.innerHTML = '';
   let project;
@@ -129,13 +131,12 @@ export function renderTodosInProjectArray(projectNameOrObject) {
         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true">${todoItem.todo}</li>
         <li class="todo-date">${formattedDate}</li>
         <li class="todo-priority">${todoItem.priority}</li>
-        <li class="todo-delete"></li>
+
         <li class="todo-move">Move to:</li>
-        <li class="todo-done">Done</li>
         `;
         setPriorityStyles(todoItem, todoUl);
+        const doneButtonEl = createDoneButton(todoUl);
         const deleteButton = createDeleteButton(todoItem, todoUl, currentProject)
-        todoUl.querySelector('.todo-delete').appendChild(deleteButton);
         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
         page.todoContainer.append(todoUl);
       }
@@ -183,8 +184,8 @@ export function renderTodosInProjectArray(projectNameOrObject) {
 
 function createDeleteButton(todo, todoUl, currentProject) {
   const deleteButtonEl = document.createElement('li');
-  todoUl.append(deleteButtonEl);
   deleteButtonEl.classList.add('todo-delete');
+  todoUl.append(deleteButtonEl);
   const trashSVG = new Image();
   trashSVG.src = trashImage;
   deleteButtonEl.append(trashSVG);
@@ -196,3 +197,40 @@ function createDeleteButton(todo, todoUl, currentProject) {
   });
   return deleteButtonEl;
 }
+
+
+
+// function createDoneButton (todoUl) {
+//   const doneButtonEl = document.createElement('li');
+//   doneButtonEl.classList.add('todo-done');
+//   todoUl.append(doneButtonEl);
+//   const checkMark = new Image();
+//   checkMark.src = checkMarkImage;
+//   doneButtonEl.append(checkMark)
+//   console.log(checkMarkImage);
+
+//   checkMark.classList.add("check-mark-svg");
+//   doneButtonEl.innerText = "Done";
+//   return doneButtonEl;
+
+
+// }
+
+// For some reason, the image wasn't appending, and I had to add this "onload" check.
+function createDoneButton(todoUl) {
+  const doneButtonEl = document.createElement('li');
+  doneButtonEl.classList.add('todo-done');
+  todoUl.append(doneButtonEl);
+  
+  const checkMark = new Image();
+  checkMark.onload = function() {
+    doneButtonEl.append(checkMark);
+  };
+  checkMark.src = checkMarkImage;
+  checkMark.classList.add("check-mark-svg");
+  doneButtonEl.innerText = "Done";
+  
+  return doneButtonEl;
+}
+
+
