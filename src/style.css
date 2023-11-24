@@ -89,6 +89,11 @@ img {
   font-family: 'Akronym';
   font-size: 2.5rem;
   font-weight: normal;
+  color: rgb(255, 0, 0);
+}
+
+.out-on-title {
+  text-decoration: line-through;
 }
 
 .bottom-controls {
@@ -303,8 +308,10 @@ input[type="checkbox"] {
 
 .todo-title:focus {
   /* border: 1px solid var(--GREEN-ACCENT); */
-  background-color:rgba(140, 0, 0, 0.41) ;
   outline: none;
+  background-color:rgba(118, 0, 0, 0.41) ;
+  /* background-color:transparent ; */
+
 }
 
 .todo-title-text {
@@ -401,11 +408,11 @@ input[type="checkbox"] {
   cursor: pointer;
   background: var(--BUTTON-BACKGROUND-HOVER);
 }
+
 .trash-svg {
   filter: invert(13%) sepia(81%) saturate(7478%) hue-rotate(7deg) brightness(92%) contrast(114%);
-  width: auto;
   cursor: pointer;
-  fill: yellow;
+  width: auto;
 }
 
 .trash-svg:active {
@@ -517,8 +524,30 @@ input[type="checkbox"] {
   padding: 3px;
   border-radius: 3px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
 }
 .current-project-styles {
   font-weight: bold;
-  border-left:  thick double white;
+  list-style: square;
+  border-left:  solid  white;
+}
+
+.project-list-trash-svg {
+  width: 20px;
+  filter: invert(13%) sepia(81%) saturate(7478%) hue-rotate(7deg) brightness(92%) contrast(114%);
+  cursor: pointer;
+}
+
+.project-list-trash-svg:active {
+  margin-right: 2px;
+  filter: drop-shadow(2px 2px 3px rgb(134, 254, 70));
+  filter: invert(83%) sepia(42%) saturate(1%) hue-rotate(25deg) brightness(102%) contrast(103%);
+}
+
+.project-list-trash-svg:hover {
+  filter: invert(77%) sepia(70%) saturate(3502%) hue-rotate(314deg) brightness(99%) contrast(102%);
 }

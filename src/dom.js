@@ -108,18 +108,42 @@ export function renderProjectList() {
   const projListContainer = makeElement('div', 'project-list-container', page.bottomControlsCont)
   for (const project of projectArray) {
     const projectEl = makeElement('li', 'project-name-element', projListContainer);
-    // projectEl.setAttribute('id', project.indexOf(projectEl));
-    projectEl.innerText = project.name;
+    const trashSVG = new Image();
+    trashSVG.src = trashImage;
+    trashSVG.classList.add("project-list-trash-svg");
+    // The image would not append the normal way. I had to use this createTextNode function.
+    projectEl.appendChild(document.createTextNode(project.name));
+    projectEl.append(trashSVG);
+    // projectEl.innerText = project.name;
     projectEl.addEventListener('click', () => {
       renderTodosInProjectArray(project);
       currentProject = project;
     styleCurrentProjectonProjectList();
     })
+    trashSVG.addEventListener('click', () =>  deleteProject(projectEl, project));
   }
-
 }
 
-function styleCurrentProjectonProjectList(params) {
+function deleteProject(projectEl, project) {
+  if (projectEl.innerText === project.name) {
+    const projectIndex = projectArray.indexOf(project);
+    if (projectIndex !== -1) {
+      projectArray.splice(projectIndex, 1);
+    }
+    projectEl.remove();
+    renderProjectList();
+    // Without the delay, it renders the project that had been deleted instead of currentProject.
+    setTimeout(() => {
+      currentProject = projectArray.length > 0 ? projectArray[0] : null;
+      console.log(currentProject);
+      renderTodosInProjectArray(currentProject);
+      console.log(currentProject);
+      styleCurrentProjectonProjectList();
+    }, 50);
+  }
+}
+
+function styleCurrentProjectonProjectList() {
   const currentProjectName = currentProject.name;
   const projectListContainer = document.querySelector('.project-list-container');
     const projectListItems = Array.from(projectListContainer.children);
@@ -133,6 +157,12 @@ function styleCurrentProjectonProjectList(params) {
 
 export function renderTodosInProjectArray(projectNameOrObject) {
   page.todoContainer.innerHTML = '';
+  // console.log("render function after clearing screen");
+  if (!projectArray || projectArray.length === 0) {
+    console.log('No projects found. Rendering empty page.');
+    return;
+  }
+
   let project;
 
   if (typeof projectNameOrObject === 'string') {
@@ -146,6 +176,7 @@ export function renderTodosInProjectArray(projectNameOrObject) {
     if (project) {
       for (const todoItem of project.projectItems) {
 
+
         const todoUl = document.createElement('ul');
         todoUl.classList.add('todo-item');
         const formattedDate = formatTodoDate(todoItem.dueDate);
@@ -158,17 +189,16 @@ export function renderTodosInProjectArray(projectNameOrObject) {
         `;
         setPriorityStyles(todoItem, todoUl);
         const doneButtonEl = createDoneButton(todoUl);
-        const deleteButton = createDeleteButton(todoItem, todoUl, currentProject)
+        const deleteButton = createTodoDeleteButton(todoItem, todoUl, currentProject)
         todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
         page.todoContainer.append(todoUl);
       }
     } else {
-      console.log(project);
+      console.log(project + "no project found");
     }
 }
 
-
-function createDeleteButton(todo, todoUl, currentProject) {
+function createTodoDeleteButton(todo, todoUl, currentProject) {
   const deleteButtonEl = makeElement('li', 'todo-delete', todoUl)
   const trashSVG = new Image();
   trashSVG.src = trashImage;
@@ -181,7 +211,6 @@ function createDeleteButton(todo, todoUl, currentProject) {
   });
   return deleteButtonEl;
 }
-
 
 
 // For some reason, the image wasn't appending, and I had to add this "onload" check.
