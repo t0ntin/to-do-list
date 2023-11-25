@@ -2,13 +2,13 @@
 import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from './logic';
 import trashImage from "./images/delete.svg";
 import checkMarkImage from "./images/check.svg";
+import plusImage from "./images/plus.svg";
 
 function myPage() {
   const mainEl = document.querySelector('.main');
   const projectInput = document.querySelector('#project-input');
   const todoInput = document.querySelector('#to-do');
   const dueDateInput = document.querySelector('#date');
-  // const descriptionInput = document.querySelector('#description');
   // priorityContainer IS INSIDE THE MODAL, NOT INSIDE THE TODOS.
   const priorityContainer = document.querySelector('.priority-container');
   const createTodoButton = document.querySelector("#create-todo-btn");
@@ -18,15 +18,9 @@ function myPage() {
   const moveDropDownContainer = document.createElement('div');
   moveDropDownContainer.classList.add('dropdown-container')
   
-  // const moveDropDownEl = document.createElement('button');
-  // moveDropDownEl.classList.add('dropdown-button')
-
-  // const dialogEl = document.createElement('dialog');  //added
   const popUpCalendarEl = document.createElement('input');
   popUpCalendarEl.type = 'date';
   popUpCalendarEl.classList.add('popup-calendar');
-
-  // dialogEl.append(popUpCalendarEl);                   //added
 
   const overlayEl = document.createElement('div');
   // const overlayEl = document.querySelector('#overlay');
@@ -34,8 +28,10 @@ function myPage() {
   mainEl.append(overlayEl);
   // overlayEl.classList.add('overlay');    
 
+  const projectListContainer = document.querySelector('.project-list-container');
+  const plusButtonContainer = document.querySelector('.plus-button-container');
 
-  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl};
+  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl, projectListContainer, plusButtonContainer};
 }
 export const page = myPage();
 
@@ -104,10 +100,10 @@ function makeElement(elementTag, className, appendToEl) {
 }
 
 export function renderProjectList() {
-  page.bottomControlsCont.innerHTML = '';
-  const projListContainer = makeElement('div', 'project-list-container', page.bottomControlsCont)
+  page.projectListContainer.innerHTML = '';
+  // const projListContainer = makeElement('div', 'project-list-container', page.bottomControlsCont)
   for (const project of projectArray) {
-    const projectEl = makeElement('li', 'project-name-element', projListContainer);
+    const projectEl = makeElement('li', 'project-name-element', page.projectListContainer);
     const trashSVG = new Image();
     trashSVG.src = trashImage;
     trashSVG.classList.add("project-list-trash-svg");
@@ -142,6 +138,15 @@ function deleteProject(projectEl, project) {
     }, 50);
   }
 }
+
+export function createPlusButton() {
+  const plusPNG = new Image();
+  plusPNG.src = plusImage;
+  page.plusButtonContainer.append(plusPNG);
+  plusPNG.classList.add("plus-png");
+
+}
+
 
 function styleCurrentProjectonProjectList() {
   const currentProjectName = currentProject.name;

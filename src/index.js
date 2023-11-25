@@ -1,6 +1,6 @@
 import './style.css';
 import { prepopulateDate } from './logic';
-import { submitToTodoContainer } from './dom.js';
+import { createPlusButton, submitToTodoContainer } from './dom.js';
 // import { isFirstDayOfMonth } from 'date-fns';
 
 // import Icon from './hamburger.jpg';
@@ -20,5 +20,6 @@ import { submitToTodoContainer } from './dom.js';
 
 prepopulateDate();
 submitToTodoContainer();
+createPlusButton();
 // console.log(mainTodoArray);
 // console.log(projectArray);
