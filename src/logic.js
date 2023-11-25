@@ -193,72 +193,6 @@ page.moveDropDownContainer.appendChild(dropdownTitle);
 }
 
 
-// function moveTodoItem (event) {
-//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-//   if (currentTodo) {
-//     const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
-//     if (event.target.classList.contains('todo-move')) {
-//         // page.todoContainer.append(page.moveDropDownContainer);
-//         positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
-//         dropdownArray.forEach((dropdownArrayItem)  => {
-//           page.moveDropDownEl.innerText = dropdownArrayItem.name;
-//           page.moveDropDownContainer.append(page.moveDropDownEl);
-
-//         })
-//         showPopupEl(page.moveDropDownContainer);
-//         page.moveDropDownEl.addEventListener('click', () => {
-//             const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
-//             console.log(selectedProjectExists);
-//             if (selectedProjectExists) {
-//               selectedProjectExists.addItem(currentTodo);
-//               currentProject.removeItem(currentTodo);
-//               renderTodosInProjectArray(currentProject);
-//               console.log(projectArray);
-//             }
-//         })
-//       }
-//   }
-
-// }
-
-
-// function moveTodoItem (event) {
-//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-//   if (currentTodo) {
-//     if (event.target.classList.contains('todo-move')) {
-//         // page.todoContainer.append(page.moveDropDownContainer);
-//         positionElement(event, '+50', '+100', page.todoContainer, page.moveDropDownContainer);
-//         const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
-//         dropdownArray.forEach((dropdownArrayItem)  => {
-//           page.moveDropDownEl.innerText = dropdownArrayItem.name;
-//           page.moveDropDownContainer.append(page.moveDropDownEl);
-
-//           showPopupEl(page.moveDropDownContainer);
-//           page.moveDropDownEl.addEventListener('click', () => {
-//               const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
-//               console.log(selectedProjectExists);
-//               if (selectedProjectExists) {
-//                 selectedProjectExists.addItem(currentTodo);
-//                 currentProject.removeItem(currentTodo);
-//                 renderTodosInProjectArray(currentProject);
-//                 console.log(projectArray);
-//               }
-//           })
-//         })
-//     }
-//   }
-
-// }
-
-// page.todoContainer.addEventListener('click', showCalendar);
-
-// page.todoContainer.addEventListener('click', function(event) {
-//   showCalendar(event);
-// });
-
-
-
-
 page.todoContainer.addEventListener('click',  (event) => handleDateClick(event));
 
 
@@ -317,7 +251,7 @@ function positionElement(event, scrollY, scrollX, containerEl, element) {
   element.style.left = `${leftOffset}px`;
 }
 
-function closePopupEl(popupEl) {
+export function closePopupEl(popupEl) {
   if (popupEl === null) {
     return;
   } else {
@@ -336,53 +270,17 @@ function handleTodoUpdate(event) {
 }
 
 
+page.plusButtonContainer.addEventListener('click', handlePlusClick);
 
-// THIS CODE WORKED 
-// page.todoContainer.addEventListener('click', (event) => showCalendar(event));
-
-// function showCalendar(event) {
-
-//   const todoItem = event.target.classList.contains('todo-date');
-//   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-//   // showPopupEl(page.popUpCalendarEl, page.overlayEl);
-//   if (todoItem) {
-//     positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);  
-//     page.popUpCalendarEl.addEventListener('change', function() {
-//       handleDateSelection(event, index, currentTodo);
-//     });
-
-//   }
-// }
+function handlePlusClick(event) {
+  if (event.target.classList.contains('plus-svg')) {
+    showPopupEl(page.modalEl);
+  }
+}
 
 
-
-
-
-
-
-// function handleDateSelection(event, index, currentTodo) {
-//   console.log(currentTodo);
-//   console.log(event.target);
-//   console.log(index)
-//     const selectedDate = page.popUpCalendarEl.value;
-//     console.log(selectedDate);
-//     currentTodo.dueDate = selectedDate;
-//     closePopupEl(page.popUpCalendarEl);
-//     renderTodosInProjectArray(currentProject);
-// }
-
-
-
-
-
-// function showPopupEl(popupEl) {
-//   if (popupEl === null) {
-//     return;
-//   } else {
-//     popupEl.classList.add("active");
-//     page.overlayEl.classList.add("active");
-//     page.overlayEl.addEventListener('click', () => closePopupEl(popupEl));
-//   }
-// }
-
-
+document.addEventListener('click', (event) => {
+  if (event.target === page.closeModalButton) {
+    closePopupEl(page.modalEl);
+  }
+})

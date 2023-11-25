@@ -1,5 +1,5 @@
 
-import { getPriority, formatTodoDate, determineProject,setPriorityStyles } from './logic';
+import { getPriority, formatTodoDate, determineProject,setPriorityStyles, closePopupEl } from './logic';
 import trashImage from "./images/delete.svg";
 import checkMarkImage from "./images/check.svg";
 import plusImage from "./images/plus.svg";
@@ -31,7 +31,10 @@ function myPage() {
   const projectListContainer = document.querySelector('.project-list-container');
   const plusButtonContainer = document.querySelector('.plus-button-container');
 
-  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl, projectListContainer, plusButtonContainer};
+  const modalEl = document.querySelector('.modal');
+  const closeModalButton = document.querySelector('.close-modal-button');
+
+  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl, projectListContainer, plusButtonContainer, modalEl, closeModalButton};
 }
 export const page = myPage();
 
@@ -87,6 +90,7 @@ export function submitToTodoContainer () {
   e.preventDefault();
     determineProject(priority);
     styleCurrentProjectonProjectList();
+    closePopupEl(page.modalEl)
   });
 }
 
@@ -140,11 +144,10 @@ function deleteProject(projectEl, project) {
 }
 
 export function createPlusButton() {
-  const plusPNG = new Image();
-  plusPNG.src = plusImage;
-  page.plusButtonContainer.append(plusPNG);
-  plusPNG.classList.add("plus-png");
-
+  const plusSVG = new Image();
+  plusSVG.src = plusImage;
+  page.plusButtonContainer.append(plusSVG);
+  plusSVG.classList.add("plus-svg");
 }
 
 
