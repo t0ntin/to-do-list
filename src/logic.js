@@ -3,7 +3,6 @@
 import { projectArray,Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject} from "./dom.js";
 import {format, parseISO} from 'date-fns';
 
-
 //PREPOPULATES DATE FIELDS
 export function prepopulateDate() {
   document.addEventListener('DOMContentLoaded', function() {
@@ -197,7 +196,6 @@ page.todoContainer.addEventListener('click',  (event) => handleDateClick(event))
 
 
 function handleDateClick(event) {
-  console.log(event.target);
   if (event.target.classList.contains('todo-date')) {
     // const dateElement = event.target.classList.contains('todo-date');
     const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
@@ -222,15 +220,6 @@ function handleDateSelection( index, currentTodo) {
     closePopupEl(page.popUpCalendarEl);
     renderTodosInProjectArray(currentProject);
 }
-
-  // const todoItem = event.target.classList.contains('todo-date');
-  // if (todoItem) {
-    // page.popUpCalendarEl.addEventListener('change', function() {
-    //   handleDateSelection(event, index, currentTodo);
-    // });
-
-  // }
-
 
 function showPopupEl(popupEl) {
   if (popupEl === null) {
@@ -277,7 +266,6 @@ function handlePlusClick(event) {
     showPopupEl(page.modalEl);
   }
 }
-
 
 document.addEventListener('click', (event) => {
   if (event.target === page.closeModalButton) {

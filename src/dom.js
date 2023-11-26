@@ -32,14 +32,25 @@ function myPage() {
   const plusButtonContainer = document.querySelector('.plus-button-container');
 
   const modalEl = document.querySelector('.modal');
-  const closeModalButton = document.querySelector('.close-modal-button');
 
-  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl, projectListContainer, plusButtonContainer, modalEl, closeModalButton};
+  const closeModalButton = document.querySelector('.close-modal-button');
+  const errorMessageContainer = document.querySelector('.error-msg-container');
+
+  return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl, projectListContainer, plusButtonContainer, modalEl, closeModalButton, errorMessageContainer};
 }
 export const page = myPage();
 
 export const projectArray = [];
 export let currentProject;
+
+
+// Store projectArray in local storage
+const localStorageData = projectArray;
+localStorage.setItem('projects', JSON.stringify(localStorageData));
+
+// Retrieve projects from local storage
+const storedData = localStorage.getItem('projects');
+const projects = JSON.parse(storedData);
 
 
 class Project {
