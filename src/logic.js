@@ -1,7 +1,7 @@
 
-
 import { projectArray,Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject} from "./dom.js";
 import {format, parseISO} from 'date-fns';
+
 
 //PREPOPULATES DATE FIELDS
 export function prepopulateDate() {
@@ -36,7 +36,7 @@ return {priority};
 }
 
 
-function getIndexAndCurrentTodo(target) {
+export function getIndexAndCurrentTodo(target) {
   const todoItem = target.closest('.todo-item');
   if (todoItem) {
     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
@@ -99,37 +99,75 @@ export function setPriorityStyles(todo, todoUl) {
   }
 }
 
-
 export function determineProject(priority) {
   const untitledProjectExists = projectArray.find((project) => project.name === 'Untitled Project');
   let userInputProjectName = page.projectInput.value;
-  const existingProject = projectArray.find((project) => project.name === userInputProjectName);
-  const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority);
-  if (userInputProjectName && existingProject) {
-    pushTodoToExistingProject(newToDo,existingProject);
+  let existingProject = projectArray.find((project) => project.name === userInputProjectName);
+  console.log("projectArray at determineProject: " + projectArray);
+  const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority);
+
+  if (!existingProject && userInputProjectName) {
+    existingProject = new Project(userInputProjectName);
+    projectArray.push(existingProject);
+  }
+
+  if (userInputProjectName && existingProject && existingProject.addItem) {
+    pushTodoToExistingProject(newToDo, existingProject);
     renderProjectList();
     togglePriority(page.todoContainer);
     renderTodosInProjectArray(existingProject.name);
   }
-  if (userInputProjectName && !existingProject) {
-    pushToProjectArray(userInputProjectName, newToDo)
-    renderProjectList();
-    togglePriority(page.todoContainer);
-    renderTodosInProjectArray(userInputProjectName);
-  }
-  if (!userInputProjectName && untitledProjectExists){
+
+  if (!userInputProjectName && untitledProjectExists) {
     pushTodoToExistingProject(newToDo, untitledProjectExists);
     renderProjectList();
     togglePriority(page.todoContainer);
     renderTodosInProjectArray("Untitled Project");
-  } 
+  }
+
   if (!userInputProjectName && !untitledProjectExists) {
-    pushToProjectArray("Untitled Project", newToDo)
+    pushToProjectArray("Untitled Project", newToDo);
     renderProjectList();
     togglePriority(page.todoContainer);
     renderTodosInProjectArray("Untitled Project");
   }
 }
+
+
+
+// export function determineProject(priority) {
+//   const untitledProjectExists = projectArray.find((project) => project.name === 'Untitled Project');
+//   let userInputProjectName = page.projectInput.value;
+//   const existingProject = projectArray.find((project) => project.name === userInputProjectName);
+//   if (existingProject) {
+//     existingProject = new Project(existingProject.name);
+//   }
+//   const newToDo = new Todo(page.todoInput.value,page.dueDateInput.value, priority);
+//   if (userInputProjectName && existingProject) {
+//     pushTodoToExistingProject(newToDo,existingProject);
+//     renderProjectList();
+//     togglePriority(page.todoContainer);
+//     renderTodosInProjectArray(existingProject.name);
+//   }
+//   if (userInputProjectName && !existingProject) {
+//     pushToProjectArray(userInputProjectName, newToDo)
+//     renderProjectList();
+//     togglePriority(page.todoContainer);
+//     renderTodosInProjectArray(userInputProjectName);
+//   }
+//   if (!userInputProjectName && untitledProjectExists){
+//     pushTodoToExistingProject(newToDo, untitledProjectExists);
+//     renderProjectList();
+//     togglePriority(page.todoContainer);
+//     renderTodosInProjectArray("Untitled Project");
+//   } 
+//   if (!userInputProjectName && !untitledProjectExists) {
+//     pushToProjectArray("Untitled Project", newToDo)
+//     renderProjectList();
+//     togglePriority(page.todoContainer);
+//     renderTodosInProjectArray("Untitled Project");
+//   }
+// }
 
 function markAsDone(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
