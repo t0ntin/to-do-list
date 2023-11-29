@@ -138,12 +138,15 @@ export function submitToTodoContainer () {
   });
 }
 
-function makeElement(elementTag, className, appendToEl) {
+export function makeElement(elementTag, className, appendToEl, textInside) {
   const element = document.createElement(elementTag);
   element.classList.add(className);
   if (appendToEl) {
     appendToEl.append(element);
   } 
+  if (textInside) {
+    element.innerText = textInside;
+  }
   return element;
 }
 
@@ -197,43 +200,6 @@ function deleteProject(projectEl, project) {
 }
 
 
-// function deleteProject(projectEl, project) {
-//   const userWantsToDelete = confirm('Do you really want to delete this project?');
-//   if (!userWantsToDelete) {
-//     return;
-//   } else {
-//     if (projectEl.innerText === project.name) {
-//       // Create a copy of projectArray to avoid modifying it directly
-//       const updatedProjects = [...projectArray];
-//       const projectIndex = updatedProjects.findIndex((p) => p.name === project.name);
-
-//       if (projectIndex !== -1) {
-//         updatedProjects.splice(projectIndex, 1);
-
-//         // Update 'projects' key in localStorage
-//         // localStorage.setItem('projects', JSON.stringify(updatedProjects));
-
-//         // Remove the project from projectArray
-//         projectArray.splice(projectIndex, 1);
-
-//         projectEl.remove();
-//         renderProjectList();
-//         styleCurrentProjectonProjectList();
-        
-//         // Without the delay, it rendered the project that had been deleted instead of currentProject.
-//         // setTimeout(() => {
-//         //   currentProject = projectArray.length > 0 ? projectArray[0].name : null;
-//         //   // saveCurrentProjectToLocalStorage();
-//         //   console.log(currentProject);
-//         //   renderTodosInProjectArray(projectArray.currentProject);
-//         //   console.log(currentProject);
-//         //   styleCurrentProjectonProjectList();
-//         // }, 50);
-//       }
-//     }
-//   }
-// }
-
 
 export function createPlusButton() {
   const plusSVG = new Image();
@@ -243,7 +209,7 @@ export function createPlusButton() {
 }
 
 
-function styleCurrentProjectonProjectList() {
+export function styleCurrentProjectonProjectList(selectedProjectExists) {
   // const currentProjectName = currentProject;
   const projectListContainer = document.querySelector('.project-list-container');
     const projectListItems = Array.from(projectListContainer.children);

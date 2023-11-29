@@ -1,5 +1,5 @@
 
-import { projectArray, Project, Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject, saveToLocalStorage} from "./dom.js";
+import { projectArray, Project, Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject, makeElement, styleCurrentProjectonProjectList,  saveToLocalStorage} from "./dom.js";
 import {format, parseISO} from 'date-fns';
 
 
@@ -264,23 +264,17 @@ function moveTodoItem(event) {
       positionElement(event, '+58', '+100', page.todoContainer, page.moveDropDownContainer);
       page.moveDropDownContainer.innerHTML = '';
       const dropdownArray = projectArray.filter((project) => project.name !== currentProject);
-      const dropdownTitle = document.createElement('div');
-dropdownTitle.innerText = "Move this todo to:";
-page.moveDropDownContainer.appendChild(dropdownTitle);
+      const dropdownTitle = makeElement('div', 'no-class', page.moveDropDownContainer, 'Move this todo to:');
       dropdownArray.forEach((dropdownArrayItem) => {
-        const moveDropdownItemEl = document.createElement('button');
-        moveDropdownItemEl.innerText = dropdownArrayItem.name;
-        moveDropdownItemEl.classList.add('move-dropdown-item-el');
-        page.moveDropDownContainer.append(moveDropdownItemEl);
+        const moveDropdownItemEl = makeElement('button', 'move-dropdown-item-el', page.moveDropDownContainer, dropdownArrayItem.name);
         moveDropdownItemEl.addEventListener('click', () => {
           const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
           if (selectedProjectExists) {
-  const matchingProject = projectArray.find(project => project.name === currentProject);
-
+            const matchingProject = projectArray.find(project => project.name === currentProject);
             selectedProjectExists.addItem(currentTodo);
             matchingProject.removeItem(currentTodo);
             closePopupEl(page.moveDropDownContainer);
-            renderTodosInProjectArray(currentProject);
+            renderTodosInProjectArray(selectedProjectExists.name);
           }
         });
       });
@@ -288,42 +282,79 @@ page.moveDropDownContainer.appendChild(dropdownTitle);
       showPopupEl(page.moveDropDownContainer);
     }
   }
-}
+} 
 
 
-page.todoContainer.addEventListener('click',  (event) => handleDateClick(event));
+page.todoContainer.addEventListener('click', (event) => handleDateClick(event));
 
 
 function handleDateClick(event) {
   if (event.target.classList.contains('todo-date')) {
-    // const dateElement = event.target.classList.contains('todo-date');
     const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
-    console.log(currentTodo);
-    console.log(index)
-  console.log(event.target);
-  
-    showPopupEl(page.popUpCalendarEl);
-    positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);  
-    page.popUpCalendarEl.addEventListener('change',  function() {
+
+    // Create a unique ID for the calendar element based on the todo index
+    const calendarId = `popUpCalendar_${index}`;
+    
+    // Check if the calendar element already exists, if not, create it
+    if (!document.getElementById(calendarId)) {
+      const calendarElement = makeElement('input', 'popup-calendar', document.body);
+      calendarElement.type = 'date';
+      calendarElement.id = calendarId;
+    }
+
+    // Show the unique calendar element
+    showPopupEl(document.getElementById(calendarId));
+
+    // Position the calendar element
+    positionElement(event, '+15', '+23', page.todoContainer, document.getElementById(calendarId));
+
+    // Add an event listener to handle date selection
+    document.getElementById(calendarId).addEventListener('change', function() {
       handleDateSelection(index, currentTodo);
     });
   }
 }
 
-function handleDateSelection( index, currentTodo) {
-  console.log(currentTodo);
-  console.log(index)
-    let selectedDate = page.popUpCalendarEl.value;
-    console.log(selectedDate);
-    currentTodo.dueDate = selectedDate;
-  console.log(currentTodo);
-
-    closePopupEl(page.popUpCalendarEl);
-    console.log(currentProject);
-    renderTodosInProjectArray(currentProject);
-    console.log(projectArray);
-    // saveToLocalStorage();
+function handleDateSelection(index, currentTodo) {
+  const selectedDate = document.getElementById(`popUpCalendar_${index}`).value;
+  currentTodo.dueDate = selectedDate;
+  closePopupEl(document.getElementById(`popUpCalendar_${index}`));
+  renderTodosInProjectArray(currentProject);
+  // saveToLocalStorage();
 }
+
+
+// function handleDateClick(event) {
+//   if (event.target.classList.contains('todo-date')) {
+//     // const dateElement = event.target.classList.contains('todo-date');
+//     const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
+//     console.log(currentTodo);
+//     console.log(index)
+//   console.log(event.target);
+  
+//     showPopupEl(page.popUpCalendarEl);
+//     positionElement(event, '+15', '+23', page.todoContainer, page.popUpCalendarEl);  
+//     page.popUpCalendarEl.addEventListener('change',  function() {
+//       handleDateSelection(index, currentTodo);
+//     });
+//   }
+// }
+
+
+// function handleDateSelection( index, currentTodo) {
+//   console.log(currentTodo);
+//   console.log(index)
+//     let selectedDate = page.popUpCalendarEl.value;
+//     console.log(selectedDate);
+//     currentTodo.dueDate = selectedDate;
+//   console.log(currentTodo);
+
+//     closePopupEl(page.popUpCalendarEl);
+//     console.log(currentProject);
+//     renderTodosInProjectArray(currentProject);
+//     console.log(projectArray);
+//     // saveToLocalStorage();
+// }
 
 function showPopupEl(popupEl) {
   if (popupEl === null) {
