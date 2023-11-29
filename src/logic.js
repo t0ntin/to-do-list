@@ -217,6 +217,7 @@ function markAsDone(event) {
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
     if (currentTodo) {
       const todoUl = page.todoContainer.children[index];
+      console.log(todoUl);
       // const descriptionLi = todoUl.querySelector('.todo-description');
       const todoTitleSpan = todoUl.querySelector('.todo-title-text');
 
@@ -274,7 +275,7 @@ function moveTodoItem(event) {
             selectedProjectExists.addItem(currentTodo);
             matchingProject.removeItem(currentTodo);
             closePopupEl(page.moveDropDownContainer);
-            renderTodosInProjectArray(selectedProjectExists.name);
+            renderTodosInProjectArray(currentProject);
           }
         });
       });

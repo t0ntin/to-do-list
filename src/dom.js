@@ -22,10 +22,10 @@ function myPage() {
   popUpCalendarEl.type = 'date';
   popUpCalendarEl.classList.add('popup-calendar');
 
-  const overlayEl = document.createElement('div');
-  // const overlayEl = document.querySelector('#overlay');
-  overlayEl.setAttribute('id', 'overlay');    
-  mainEl.append(overlayEl);
+  // const overlayEl = document.createElement('div');
+  const overlayEl = document.querySelector('#overlay');
+  // overlayEl.setAttribute('id', 'overlay');    
+  // mainEl.append(overlayEl);
   // overlayEl.classList.add('overlay');    
 
   const projectListContainer = document.querySelector('.project-list-container');
@@ -163,10 +163,10 @@ export function renderProjectList() {
     projectEl.append(trashSVG);
     // projectEl.innerText = project.name;
     projectEl.addEventListener('click', () => {
-      renderTodosInProjectArray(project);
+      renderTodosInProjectArray(project.name);
       currentProject = project.name;
       // saveCurrentProjectToLocalStorage();
-    styleCurrentProjectonProjectList();
+      styleCurrentProjectonProjectList();
     })
     trashSVG.addEventListener('click', () =>  deleteProject(projectEl, project));
   }
@@ -223,44 +223,32 @@ export function styleCurrentProjectonProjectList(selectedProjectExists) {
     }
 }
 
-
-
-export function renderTodosInProjectArray(projectNameOrObject) {
-  // console.log('renderTodosInProjectArray called with:', projectNameOrObject);
+export function renderTodosInProjectArray(projectName) {
   page.todoContainer.innerHTML = '';
 
-  if (!projectNameOrObject) {
-    console.log('No projects found. Rendering empty page.');
+  if (!projectName) {
+    console.log('No project name found. Rendering empty page.');
     return;
   }
 
-  let project;
-
-  if (typeof projectNameOrObject === 'string') {
-    project = projectArray.find((p) => p.name === projectNameOrObject);
-  } else if (Array.isArray(projectNameOrObject) && projectNameOrObject.length > 0) {
-    // If an array is passed, take the first element as the project
-    project = projectNameOrObject[0];
-  } else if (typeof projectNameOrObject === 'object') {
-    project = projectNameOrObject;
-  } else {
-    console.error(`Invalid project argument: ${projectNameOrObject}`);
-    return;
-  }
+  const project = projectArray.find((p) => p.name === projectName);
 
   if (!project) {
-    console.log(`Project not found: ${projectNameOrObject}`);
+    console.log(`Project not found: ${projectName}`);
     return;
   }
 
   if (project.projectItems && Array.isArray(project.projectItems)) {
-    // console.log('Valid project:', project);
     for (const todoItem of project.projectItems) {
       const todoUl = document.createElement('ul');
       todoUl.classList.add('todo-item');
       const formattedDate = formatTodoDate(todoItem.dueDate);
       todoUl.innerHTML = `
-        <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true"><span class="todo-title-text">${todoItem.todo}</span></li>
+      <li class="todo-title" contenteditable="true">
+      <span class="todo-title-text ${todoItem.isDone ? 'todo-marked-as-done' : ''}">
+        ${todoItem.todo}
+      </span>
+    </li>
         <li class="todo-date">${formattedDate}</li>
         <li class="todo-priority">${todoItem.priority}</li>
         <li class="todo-move">Move to:</li>
@@ -277,6 +265,57 @@ export function renderTodosInProjectArray(projectNameOrObject) {
 }
 
 
+// export function renderTodosInProjectArray(projectNameOrObject) {
+//   // console.log('renderTodosInProjectArray called with:', projectNameOrObject);
+//   page.todoContainer.innerHTML = '';
+
+//   if (!projectNameOrObject) {
+//     console.log('No projects found. Rendering empty page.');
+//     return;
+//   }
+
+//   let project;
+
+//   if (typeof projectNameOrObject === 'string') {
+//     project = projectArray.find((p) => p.name === projectNameOrObject);
+//   } else if (Array.isArray(projectNameOrObject) && projectNameOrObject.length > 0) {
+//     // If an array is passed, take the first element as the project
+//     project = projectNameOrObject[0];
+//   } else if (typeof projectNameOrObject === 'object') {
+//     project = projectNameOrObject;
+//   } else {
+//     console.error(`Invalid project argument: ${projectNameOrObject}`);
+//     return;
+//   }
+
+//   if (!project) {
+//     console.log(`Project not found: ${projectNameOrObject}`);
+//     return;
+//   }
+
+//   if (project.projectItems && Array.isArray(project.projectItems)) {
+//     // console.log('Valid project:', project);
+//     for (const todoItem of project.projectItems) {
+//       const todoUl = document.createElement('ul');
+//       todoUl.classList.add('todo-item');
+//       const formattedDate = formatTodoDate(todoItem.dueDate);
+//       todoUl.innerHTML = `
+//         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true"><span class="todo-title-text">${todoItem.todo}</span></li>
+//         <li class="todo-date">${formattedDate}</li>
+//         <li class="todo-priority">${todoItem.priority}</li>
+//         <li class="todo-move">Move to:</li>
+//       `;
+//       setPriorityStyles(todoItem, todoUl);
+//       const doneButtonEl = createDoneButton(todoUl);
+//       const deleteButton = createTodoDeleteButton(todoItem, todoUl, project);
+//       todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
+//       page.todoContainer.append(todoUl);
+//     }
+//   } else {
+//     console.log(`Invalid project or projectItems: ${JSON.stringify(project)}`);
+//   }
+// }
+
 
 function createTodoDeleteButton(todo, todoUl, project) {
   const deleteButtonEl = makeElement('li', 'todo-delete', todoUl);
@@ -286,7 +325,7 @@ function createTodoDeleteButton(todo, todoUl, project) {
   trashSVG.classList.add("trash-svg");
 
   deleteButtonEl.addEventListener('click', () => {
-    const userWantsToDelete = confirm('Do you really want to delete this project?');
+    const userWantsToDelete = confirm('Do you really want to delete this item?');
     
     if (userWantsToDelete && project) {
       project.removeItem(todo);
@@ -303,59 +342,6 @@ function createTodoDeleteButton(todo, todoUl, project) {
 
   return deleteButtonEl;
 }
-
-
-
-
-// function createTodoDeleteButton(todo, todoUl, currentProject) {
-//   const deleteButtonEl = makeElement('li', 'todo-delete', todoUl);
-//   const trashSVG = new Image();
-//   trashSVG.src = trashImage;
-//   deleteButtonEl.append(trashSVG);
-//   trashSVG.classList.add("trash-svg");
-
-//   deleteButtonEl.addEventListener('click', () => {
-//     const userWantsToDelete = confirm('Do you really want to delete this project?');
-    
-//     if (userWantsToDelete) {
-//       currentProject.removeItem(todo);
-
-//       // Update 'projects' key in localStorage with the modified projectArray
-//       localStorage.setItem('projects', JSON.stringify(projectArray));
-
-//       // Remove the todo from the DOM
-//       todoUl.remove();
-
-//       console.log(projectArray);
-//     }
-//   });
-
-//   return deleteButtonEl;
-// }
-
-
-
-
-
-// function createTodoDeleteButton(todo, todoUl, currentProject) {
-//   const deleteButtonEl = makeElement('li', 'todo-delete', todoUl);
-//   const trashSVG = new Image();
-//   trashSVG.src = trashImage;
-//   deleteButtonEl.append(trashSVG);
-//   trashSVG.classList.add("trash-svg");
-//   deleteButtonEl.addEventListener('click', () => {
-//     const userWantsToDelete = confirm('Do you really want to delete this project?');
-//     if (!userWantsToDelete) {
-//       return;
-//     } else {
-
-//       currentProject.removeItem(todo);
-//       todoUl.remove();
-//       console.log(projectArray);
-//     }
-//     });
-//   return deleteButtonEl;
-// }
 
 
 // For some reason, the image wasn't appending, and I had to add this "onload" check.

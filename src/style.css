@@ -159,7 +159,7 @@ legend {
   margin-bottom: 10px;
 }
 
-input {
+#project-input, #to-do, #date, .popup-calendar {
   margin: 3px 0 15px 0;
   background-color: var(--SECONDARY-BG-COLOR);
   border-radius: 12px;
