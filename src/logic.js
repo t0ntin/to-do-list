@@ -1,5 +1,5 @@
 
-import { projectArray,Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject} from "./dom.js";
+import { projectArray, Project, Todo, page, pushToProjectArray, renderProjectList, renderTodosInProjectArray, pushTodoToExistingProject, currentProject, saveToLocalStorage} from "./dom.js";
 import {format, parseISO} from 'date-fns';
 
 
@@ -36,48 +36,88 @@ return {priority};
 }
 
 
+// export function getIndexAndCurrentTodo(target) {
+//   const todoItem = target.closest('.todo-item');
+//   if (todoItem) {
+//     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
+//     // console.log(page.todoContainer.children);
+//     if (index !== -1 && currentProject) {
+//       console.log(currentProject);
+//       // const currentTodo = currentProject.projectItems[index];
+//       const currentTodo = projectArray.currentProject;
+//       console.log(currentTodo);
+//       // console.log(page.todoContainer.children);
+//       return { index, currentTodo };
+//     }
+//   }
+//   return { index: -1, currentTodo: null };
+// }
+
 export function getIndexAndCurrentTodo(target) {
   const todoItem = target.closest('.todo-item');
+
   if (todoItem) {
     const index = Array.from(page.todoContainer.children).indexOf(todoItem);
-    // console.log(page.todoContainer.children);
+
     if (index !== -1 && currentProject) {
-      const currentTodo = currentProject.projectItems[index];
-      // console.log(page.todoContainer.children);
-      return { index, currentTodo };
+      // Find the project in projectArray that matches the currentProject name
+      const matchingProject = projectArray.find(project => project.name === currentProject);
+
+      if (matchingProject) {
+        // Access the projectItems property and get the currentTodo
+        const currentTodo = matchingProject.projectItems[index];
+
+        if (currentTodo) {
+          return { index, currentTodo };
+        } else {
+          console.error('Current Todo is undefined.');
+        }
+      } else {
+        console.error('Matching project not found in projectArray.');
+      }
     }
   }
-  return { index: -1, currentTodo: null };
+
+  return { index: -1, currentTodo: null};
 }
+
 
 page.todoContainer.addEventListener('click', togglePriority);
 
 
 export function togglePriority(e) {
+  const matchingProject = projectArray.find(project => project.name === currentProject);
   if (e.target) {
     const priorityEl = e.target.closest('.todo-priority');
     if (priorityEl) {
-          const { index, currentTodo } = getIndexAndCurrentTodo(e.target);
-          if (currentTodo) {
+      const { index } = getIndexAndCurrentTodo(e.target);
+
+      // console.log(matchingProject);
+      // removing this next if statement allowed me to change the priority after refreshing.
+      // if (currentTodo) {
+            // console.log(currentTodo);
             if (priorityEl.textContent === 'High') {
               priorityEl.textContent = 'Medium';
               priorityEl.classList.remove('todo-priority-high');
               priorityEl.classList.add('todo-priority-medium');
-              currentProject.projectItems[index].priority = 'Medium';
+              matchingProject.projectItems[index].priority = 'Medium';
             } else if (priorityEl.textContent === 'Medium') {
               priorityEl.textContent = 'Low';
               priorityEl.classList.remove('todo-priority-medium');
               priorityEl.classList.add('todo-priority-low');
-              currentProject.projectItems[index].priority = 'Low';
+              matchingProject.projectItems[index].priority = 'Low';
+
             } else if (priorityEl.textContent === 'Low') {
               priorityEl.textContent = 'High';
               priorityEl.classList.remove('todo-priority-low');
               priorityEl.classList.add('todo-priority-high');
-              currentProject.projectItems[index].priority = 'High';
+              matchingProject.projectItems[index].priority = 'High';
+
             }
-          }
+          // }
         }
-  }
+        // saveToLocalStorage()
+      }
 }
 
 
@@ -103,15 +143,17 @@ export function determineProject(priority) {
   const untitledProjectExists = projectArray.find((project) => project.name === 'Untitled Project');
   let userInputProjectName = page.projectInput.value;
   let existingProject = projectArray.find((project) => project.name === userInputProjectName);
-  console.log("projectArray at determineProject: " + projectArray);
+  // console.log( existingProject);
   const newToDo = new Todo(page.todoInput.value, page.dueDateInput.value, priority);
 
   if (!existingProject && userInputProjectName) {
+    // console.log("firing 1");
     existingProject = new Project(userInputProjectName);
     projectArray.push(existingProject);
   }
 
   if (userInputProjectName && existingProject && existingProject.addItem) {
+    // console.log("firing 2");
     pushTodoToExistingProject(newToDo, existingProject);
     renderProjectList();
     togglePriority(page.todoContainer);
@@ -119,6 +161,7 @@ export function determineProject(priority) {
   }
 
   if (!userInputProjectName && untitledProjectExists) {
+    // console.log("firing 3");
     pushTodoToExistingProject(newToDo, untitledProjectExists);
     renderProjectList();
     togglePriority(page.todoContainer);
@@ -126,6 +169,7 @@ export function determineProject(priority) {
   }
 
   if (!userInputProjectName && !untitledProjectExists) {
+    // console.log("firing 4");
     pushToProjectArray("Untitled Project", newToDo);
     renderProjectList();
     togglePriority(page.todoContainer);
@@ -177,17 +221,32 @@ function markAsDone(event) {
       const todoTitleSpan = todoUl.querySelector('.todo-title-text');
 
       if (!currentTodo.isDone) {
-        todoTitleSpan.classList.add('todo-marked-as-done');
-        // descriptionLi.classList.add('todo-marked-as-done');
+        // console.log('Before applying class');
         currentTodo.isDone = true;
+        todoTitleSpan.classList.add('todo-marked-as-done');
+        // console.log('After applying class');
+        // saveToLocalStorage()
+        // console.log(localStorage.getItem('projects'));
+        // console.log(localStorage.getItem('currentProject'));
+
       } else {
+        console.log('Before applying class');
         todoTitleSpan.classList.remove('todo-marked-as-done');
-        // descriptionLi.classList.remove('todo-marked-as-done');
+        console.log('After applying class');
         currentTodo.isDone = false;
+        console.log('marked as done removed');
+        // saveToLocalStorage()
+
+        // console.log(localStorage.getItem('projects'));
+        // console.log(localStorage.getItem('currentProject'));
+
+
       }
-      console.log('marked as done');
     }
+    console.log(currentTodo.isDone);
 }
+
+// IT DOESN'T REMEBER A FALSE
 
 page.todoContainer.addEventListener('click', function(event) {
   if (event.target.classList.contains('todo-done') || event.target.classList.contains('check-mark-svg')) {
@@ -204,7 +263,7 @@ function moveTodoItem(event) {
     if (event.target.classList.contains('todo-move')) {
       positionElement(event, '+58', '+100', page.todoContainer, page.moveDropDownContainer);
       page.moveDropDownContainer.innerHTML = '';
-      const dropdownArray = projectArray.filter((project) => project.name !== currentProject.name);
+      const dropdownArray = projectArray.filter((project) => project.name !== currentProject);
       const dropdownTitle = document.createElement('div');
 dropdownTitle.innerText = "Move this todo to:";
 page.moveDropDownContainer.appendChild(dropdownTitle);
@@ -216,8 +275,10 @@ page.moveDropDownContainer.appendChild(dropdownTitle);
         moveDropdownItemEl.addEventListener('click', () => {
           const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
           if (selectedProjectExists) {
+  const matchingProject = projectArray.find(project => project.name === currentProject);
+
             selectedProjectExists.addItem(currentTodo);
-            currentProject.removeItem(currentTodo);
+            matchingProject.removeItem(currentTodo);
             closePopupEl(page.moveDropDownContainer);
             renderTodosInProjectArray(currentProject);
           }
@@ -255,8 +316,13 @@ function handleDateSelection( index, currentTodo) {
     let selectedDate = page.popUpCalendarEl.value;
     console.log(selectedDate);
     currentTodo.dueDate = selectedDate;
+  console.log(currentTodo);
+
     closePopupEl(page.popUpCalendarEl);
+    console.log(currentProject);
     renderTodosInProjectArray(currentProject);
+    console.log(projectArray);
+    // saveToLocalStorage();
 }
 
 function showPopupEl(popupEl) {

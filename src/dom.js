@@ -38,55 +38,35 @@ function myPage() {
 
   return {projectInput, todoInput, dueDateInput, priorityContainer, createTodoButton, todoContainer, bottomControlsCont, moveDropDownContainer, popUpCalendarEl, overlayEl, projectListContainer, plusButtonContainer, modalEl, closeModalButton, errorMessageContainer};
 }
+
 export const page = myPage();
 
-export let projectArray = [];
-
-export function getProjects() {
-  const serializedProjects = localStorage.getItem('projects');
-  if (serializedProjects !== null) {
-    projectArray = JSON.parse(serializedProjects);
-  }
-}
+// export let projectArray =  JSON.parse(localStorage.getItem('projects')) || [];
 
 
 // export const getProjectsFromLocalStorage = () => JSON.parse(localStorage.getItem('projects')) || [];
 
-console.log("projectArray after instantiation: "+projectArray); 
+// console.log(projectArray); 
+// export let currentProject;
+// const storedCurrentProject = JSON.parse(localStorage.getItem('currentProject'));
+// export let currentProject = storedCurrentProject || null;
+
+export let projectArray = [];
 export let currentProject;
 console.log(currentProject);
 
 // const localStorageData = projectArray;
 
-function saveToLocalStorage() {
+export function saveToLocalStorage() {
   // Here, we are "serializing" the object.
   localStorage.setItem('projects', JSON.stringify(projectArray));
 }
 
-// export function getProjectsFromLocalStorage() {
-//   const storedData = localStorage.getItem('projects');
-//   console.log('Raw data from local storage:', storedData);
-//   const projectsFromLocalStorage = JSON.parse(storedData);
-//   return Array.isArray(projectsFromLocalStorage) ? projectsFromLocalStorage : [];
-// }
+function saveCurrentProjectToLocalStorage() {
+  localStorage.setItem('currentProject', JSON.stringify(currentProject));
+}
 
-
-
-
-// dom.js
-// export function getProjectsFromLocalStorage() {
-//   console.log('Data retrieved from local storage:', projectArray);
-
-//   if (Array.isArray(projectArray) && projectArray.length > 0) {
-//     // Projects are available and in the expected format, render them
-//     renderTodosInProjectArray(projectArray);
-//   } else {
-//     console.log('No projects found or data format is incorrect. Rendering empty page.');
-//   }
-// }
-
-
-class Project {
+export class Project {
   constructor(name) {
       this.name = name;
       this.projectItems = [];
@@ -96,6 +76,11 @@ class Project {
   }
   removeItem(toDoItem) {
       this.projectItems.splice(this.projectItems.indexOf(toDoItem), 1);
+  }
+  static createFromObject(projectObject) {
+    const project = new Project(projectObject.name);
+    projectObject.projectItems.forEach(todoItem => project.addItem(todoItem));
+    return project;
   }
 }
 
@@ -109,22 +94,32 @@ export class Todo {
   }
 }
 
+// const storedProjects = JSON.parse(localStorage.getItem('projects')) || [];
+// export let projectArray = storedProjects.map(Project.createFromObject);
+
 export function pushToProjectArray(name, projectItem) {
   const newProject = new Project(name);
   newProject.addItem(projectItem);
   projectArray.push(newProject);
-  currentProject = newProject;
-  localStorage.setItem('currentProject', JSON.stringify(newProject));
-  console.log(newProject);
-  console.log(projectArray);
+  currentProject = newProject.name;
+  console.log(currentProject);
+  // localStorage.setItem('currentProject', JSON.stringify(newProject));
+  // console.log(newProject);
+  // console.log(projectArray);
 }
  
 export function pushTodoToExistingProject(newToDo, existingProject) {
-  console.log('Before addItem:', existingProject);
+  // console.log('Before addItem:', existingProject);
+  // console.log('Is existingProject an instance of Project:', existingProject instanceof Project);
+
+  // console.log('Type of existingProject:', typeof existingProject);
+  // console.log('newToDo:', newToDo);
   existingProject.addItem(newToDo);
-  console.log('After addItem:', existingProject);
-  currentProject = existingProject;
-  localStorage.setItem('currentProject', JSON.stringify(existingProject));
+  // console.log('After addItem:', existingProject);
+  currentProject = existingProject.name;
+  console.log(currentProject);
+
+  // localStorage.setItem('currentProject', JSON.stringify(existingProject));
   console.log(existingProject);
   console.log(projectArray);
 }
@@ -138,7 +133,7 @@ export function submitToTodoContainer () {
   e.preventDefault();
     determineProject(priority);
     styleCurrentProjectonProjectList();
-    saveToLocalStorage()
+    // saveToLocalStorage()
     closePopupEl(page.modalEl)
   });
 }
@@ -166,7 +161,8 @@ export function renderProjectList() {
     // projectEl.innerText = project.name;
     projectEl.addEventListener('click', () => {
       renderTodosInProjectArray(project);
-      currentProject = project;
+      currentProject = project.name;
+      // saveCurrentProjectToLocalStorage();
     styleCurrentProjectonProjectList();
     })
     trashSVG.addEventListener('click', () =>  deleteProject(projectEl, project));
@@ -175,34 +171,26 @@ export function renderProjectList() {
 
 function deleteProject(projectEl, project) {
   const userWantsToDelete = confirm('Do you really want to delete this project?');
+  
   if (!userWantsToDelete) {
     return;
   } else {
     if (projectEl.innerText === project.name) {
-      // Create a copy of projectArray to avoid modifying it directly
-      const updatedProjects = [...projectArray];
-      const projectIndex = updatedProjects.findIndex((p) => p.name === project.name);
+      const projectIndex = projectArray.findIndex((p) => p.name === project.name);
 
       if (projectIndex !== -1) {
-        updatedProjects.splice(projectIndex, 1);
-
-        // Update 'projects' key in localStorage
-        localStorage.setItem('projects', JSON.stringify(updatedProjects));
-
-        // Remove the project from projectArray
-        projectArray.splice(projectIndex, 1);
+        projectArray.splice(projectIndex, 1);  // Modifying projectArray directly
 
         projectEl.remove();
         renderProjectList();
         
-        // Without the delay, it renders the project that had been deleted instead of currentProject.
-        setTimeout(() => {
-          currentProject = projectArray.length > 0 ? projectArray[0] : null;
-          console.log(currentProject);
-          renderTodosInProjectArray(currentProject);
+        // If there are remaining projects, set the first one as the current project
+        if (projectArray.length > 0) {
+          const firstProject = projectArray[0];
+          currentProject = firstProject.name;
           console.log(currentProject);
           styleCurrentProjectonProjectList();
-        }, 50);
+        }
       }
     }
   }
@@ -214,25 +202,38 @@ function deleteProject(projectEl, project) {
 //   if (!userWantsToDelete) {
 //     return;
 //   } else {
-
 //     if (projectEl.innerText === project.name) {
-//       const projectIndex = projectArray.indexOf(project);
+//       // Create a copy of projectArray to avoid modifying it directly
+//       const updatedProjects = [...projectArray];
+//       const projectIndex = updatedProjects.findIndex((p) => p.name === project.name);
+
 //       if (projectIndex !== -1) {
+//         updatedProjects.splice(projectIndex, 1);
+
+//         // Update 'projects' key in localStorage
+//         // localStorage.setItem('projects', JSON.stringify(updatedProjects));
+
+//         // Remove the project from projectArray
 //         projectArray.splice(projectIndex, 1);
-//       }
-//       projectEl.remove();
-//       renderProjectList();
-//       // Without the delay, it renders the project that had been deleted instead of currentProject.
-//       setTimeout(() => {
-//         currentProject = projectArray.length > 0 ? projectArray[0] : null;
-//         console.log(currentProject);
-//         renderTodosInProjectArray(currentProject);
-//         console.log(currentProject);
+
+//         projectEl.remove();
+//         renderProjectList();
 //         styleCurrentProjectonProjectList();
-//       }, 50);
+        
+//         // Without the delay, it rendered the project that had been deleted instead of currentProject.
+//         // setTimeout(() => {
+//         //   currentProject = projectArray.length > 0 ? projectArray[0].name : null;
+//         //   // saveCurrentProjectToLocalStorage();
+//         //   console.log(currentProject);
+//         //   renderTodosInProjectArray(projectArray.currentProject);
+//         //   console.log(currentProject);
+//         //   styleCurrentProjectonProjectList();
+//         // }, 50);
+//       }
 //     }
 //   }
 // }
+
 
 export function createPlusButton() {
   const plusSVG = new Image();
@@ -243,19 +244,23 @@ export function createPlusButton() {
 
 
 function styleCurrentProjectonProjectList() {
-  const currentProjectName = currentProject.name;
+  // const currentProjectName = currentProject;
   const projectListContainer = document.querySelector('.project-list-container');
     const projectListItems = Array.from(projectListContainer.children);
     for (const projectListItem of projectListItems) {
         projectListItem.classList.remove('current-project-styles');
-      if (projectListItem.innerText === currentProjectName) {
+      if (projectListItem.innerText === currentProject) {
+        // console.log(`styling + ${projectListItem}`);
         projectListItem.classList.add('current-project-styles');
+        // console.log('Class added to:', projectListItem);
       }
     }
 }
 
+
+
 export function renderTodosInProjectArray(projectNameOrObject) {
-  console.log('renderTodosInProjectArray called with:', projectNameOrObject);
+  // console.log('renderTodosInProjectArray called with:', projectNameOrObject);
   page.todoContainer.innerHTML = '';
 
   if (!projectNameOrObject) {
@@ -283,7 +288,7 @@ export function renderTodosInProjectArray(projectNameOrObject) {
   }
 
   if (project.projectItems && Array.isArray(project.projectItems)) {
-    console.log('Valid project:', project);
+    // console.log('Valid project:', project);
     for (const todoItem of project.projectItems) {
       const todoUl = document.createElement('ul');
       todoUl.classList.add('todo-item');
@@ -321,7 +326,7 @@ function createTodoDeleteButton(todo, todoUl, project) {
       project.removeItem(todo);
 
       // Update 'projects' key in localStorage with the modified projectArray
-      localStorage.setItem('projects', JSON.stringify(projectArray));
+      // localStorage.setItem('projects', JSON.stringify(projectArray));
 
       // Remove the todo from the DOM
       todoUl.remove();
