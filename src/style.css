@@ -65,7 +65,7 @@ img {
 }
 
 .main {
-  height: 100vh;
+  height: 95vh;
   background-color: var(--BACKGROUND-COLOR);
   display: grid;
   grid-template-columns: minmax(320px, 360px) minmax(55px, 60px);
