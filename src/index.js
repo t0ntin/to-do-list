@@ -1,21 +1,21 @@
-
-import './style.css';
-// import './form-validation.js'
-import { prepopulateDate } from './logic';
-import { createPlusButton, submitToTodoContainer, renderProjectList, renderTodosInProjectArray,  projectArray, getProjects, currentProject } from './dom.js';
-import { validateForm } from './form-validation.js';
-
+import "./style.css";
+import { prepopulateDate } from "./logic";
+import {
+  createPlusButton,
+  submitToTodoContainer,
+  renderProjectList,
+  renderTodosInProjectArray,
+  projectArray,
+  currentProject,
+} from "./dom.js";
+import { validateForm } from "./form-validation.js";
 
 window.onload = () => {
-
   renderTodosInProjectArray(currentProject);
   renderProjectList();
-
+  console.log(projectArray);
 };
 
-
-
 prepopulateDate();
-
 submitToTodoContainer();
 createPlusButton();
