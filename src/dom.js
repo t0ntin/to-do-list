@@ -22,11 +22,7 @@ function myPage() {
   popUpCalendarEl.type = 'date';
   popUpCalendarEl.classList.add('popup-calendar');
 
-  // const overlayEl = document.createElement('div');
   const overlayEl = document.querySelector('#overlay');
-  // overlayEl.setAttribute('id', 'overlay');    
-  // mainEl.append(overlayEl);
-  // overlayEl.classList.add('overlay');    
 
   const projectListContainer = document.querySelector('.project-list-container');
   const plusButtonContainer = document.querySelector('.plus-button-container');
@@ -48,11 +44,11 @@ export const page = myPage();
 
 // console.log(projectArray); 
 // export let currentProject;
-// const storedCurrentProject = JSON.parse(localStorage.getItem('currentProject'));
-// export let currentProject = storedCurrentProject || null;
+const storedCurrentProject = localStorage.getItem('currentProject');
+export let currentProject = storedCurrentProject || null;
 
-export let projectArray = [];
-export let currentProject;
+// export let projectArray = [];
+// export let currentProject;
 console.log(currentProject);
 
 // const localStorageData = projectArray;
@@ -63,7 +59,9 @@ export function saveToLocalStorage() {
 }
 
 function saveCurrentProjectToLocalStorage() {
-  localStorage.setItem('currentProject', JSON.stringify(currentProject));
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] Saving current project to localStorage:`, currentProject);
+  localStorage.setItem('currentProject', currentProject);
 }
 
 export class Project {
@@ -94,8 +92,8 @@ export class Todo {
   }
 }
 
-// const storedProjects = JSON.parse(localStorage.getItem('projects')) || [];
-// export let projectArray = storedProjects.map(Project.createFromObject);
+const storedProjects = JSON.parse(localStorage.getItem('projects')) || [];
+export let projectArray = storedProjects.map(Project.createFromObject);
 
 export function pushToProjectArray(name, projectItem) {
   const newProject = new Project(name);
@@ -103,7 +101,7 @@ export function pushToProjectArray(name, projectItem) {
   projectArray.push(newProject);
   currentProject = newProject.name;
   console.log(currentProject);
-  // localStorage.setItem('currentProject', JSON.stringify(newProject));
+  localStorage.setItem('currentProject', newProject.name);
   // console.log(newProject);
   // console.log(projectArray);
 }
@@ -119,7 +117,7 @@ export function pushTodoToExistingProject(newToDo, existingProject) {
   currentProject = existingProject.name;
   console.log(currentProject);
 
-  // localStorage.setItem('currentProject', JSON.stringify(existingProject));
+  localStorage.setItem('currentProject', existingProject.name);
   console.log(existingProject);
   console.log(projectArray);
 }
@@ -133,7 +131,7 @@ export function submitToTodoContainer () {
   e.preventDefault();
     determineProject(priority);
     styleCurrentProjectonProjectList();
-    // saveToLocalStorage()
+    saveToLocalStorage()
     closePopupEl(page.modalEl)
   });
 }
@@ -152,7 +150,6 @@ export function makeElement(elementTag, className, appendToEl, textInside) {
 
 export function renderProjectList() {
   page.projectListContainer.innerHTML = '';
-  // const projListContainer = makeElement('div', 'project-list-container', page.bottomControlsCont)
   for (const project of projectArray) {
     const projectEl = makeElement('li', 'project-name-element', page.projectListContainer);
     const trashSVG = new Image();
@@ -165,10 +162,15 @@ export function renderProjectList() {
     projectEl.addEventListener('click', () => {
       renderTodosInProjectArray(project.name);
       currentProject = project.name;
-      // saveCurrentProjectToLocalStorage();
+      saveCurrentProjectToLocalStorage();
+      // localStorage.setItem('currentProject', currentProject);
+      console.log(currentProject);
       styleCurrentProjectonProjectList();
     })
-    trashSVG.addEventListener('click', () =>  deleteProject(projectEl, project));
+    trashSVG.addEventListener('click', (event) =>  {
+      event.stopPropagation();
+      deleteProject(projectEl, project);
+    });
   }
 }
 
@@ -191,7 +193,10 @@ function deleteProject(projectEl, project) {
         if (projectArray.length > 0) {
           const firstProject = projectArray[0];
           currentProject = firstProject.name;
-          console.log(currentProject);
+          saveToLocalStorage();
+          console.log('Current project before saving:', currentProject);
+          // saveCurrentProjectToLocalStorage();
+          localStorage.setItem('currentProject', currentProject);
           styleCurrentProjectonProjectList();
         }
       }
@@ -216,9 +221,7 @@ export function styleCurrentProjectonProjectList(selectedProjectExists) {
     for (const projectListItem of projectListItems) {
         projectListItem.classList.remove('current-project-styles');
       if (projectListItem.innerText === currentProject) {
-        // console.log(`styling + ${projectListItem}`);
         projectListItem.classList.add('current-project-styles');
-        // console.log('Class added to:', projectListItem);
       }
     }
 }
@@ -246,9 +249,7 @@ export function renderTodosInProjectArray(projectName) {
       todoUl.innerHTML = `
       <li class="todo-title" contenteditable="true">
       <span class="todo-title-text ${todoItem.isDone ? 'todo-marked-as-done' : ''}">
-        ${todoItem.todo}
-      </span>
-    </li>
+        ${todoItem.todo}</span></li>
         <li class="todo-date">${formattedDate}</li>
         <li class="todo-priority">${todoItem.priority}</li>
         <li class="todo-move">Move to:</li>
@@ -263,58 +264,6 @@ export function renderTodosInProjectArray(projectName) {
     console.log(`Invalid project or projectItems: ${JSON.stringify(project)}`);
   }
 }
-
-
-// export function renderTodosInProjectArray(projectNameOrObject) {
-//   // console.log('renderTodosInProjectArray called with:', projectNameOrObject);
-//   page.todoContainer.innerHTML = '';
-
-//   if (!projectNameOrObject) {
-//     console.log('No projects found. Rendering empty page.');
-//     return;
-//   }
-
-//   let project;
-
-//   if (typeof projectNameOrObject === 'string') {
-//     project = projectArray.find((p) => p.name === projectNameOrObject);
-//   } else if (Array.isArray(projectNameOrObject) && projectNameOrObject.length > 0) {
-//     // If an array is passed, take the first element as the project
-//     project = projectNameOrObject[0];
-//   } else if (typeof projectNameOrObject === 'object') {
-//     project = projectNameOrObject;
-//   } else {
-//     console.error(`Invalid project argument: ${projectNameOrObject}`);
-//     return;
-//   }
-
-//   if (!project) {
-//     console.log(`Project not found: ${projectNameOrObject}`);
-//     return;
-//   }
-
-//   if (project.projectItems && Array.isArray(project.projectItems)) {
-//     // console.log('Valid project:', project);
-//     for (const todoItem of project.projectItems) {
-//       const todoUl = document.createElement('ul');
-//       todoUl.classList.add('todo-item');
-//       const formattedDate = formatTodoDate(todoItem.dueDate);
-//       todoUl.innerHTML = `
-//         <li class="todo-title ${todoItem.isDone ? 'todo-marked-as-done' : ''}" contenteditable="true"><span class="todo-title-text">${todoItem.todo}</span></li>
-//         <li class="todo-date">${formattedDate}</li>
-//         <li class="todo-priority">${todoItem.priority}</li>
-//         <li class="todo-move">Move to:</li>
-//       `;
-//       setPriorityStyles(todoItem, todoUl);
-//       const doneButtonEl = createDoneButton(todoUl);
-//       const deleteButton = createTodoDeleteButton(todoItem, todoUl, project);
-//       todoUl.setAttribute('id', project.projectItems.indexOf(todoItem));
-//       page.todoContainer.append(todoUl);
-//     }
-//   } else {
-//     console.log(`Invalid project or projectItems: ${JSON.stringify(project)}`);
-//   }
-// }
 
 
 function createTodoDeleteButton(todo, todoUl, project) {

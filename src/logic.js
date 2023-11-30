@@ -91,11 +91,6 @@ export function togglePriority(e) {
     const priorityEl = e.target.closest('.todo-priority');
     if (priorityEl) {
       const { index } = getIndexAndCurrentTodo(e.target);
-
-      // console.log(matchingProject);
-      // removing this next if statement allowed me to change the priority after refreshing.
-      // if (currentTodo) {
-            // console.log(currentTodo);
             if (priorityEl.textContent === 'High') {
               priorityEl.textContent = 'Medium';
               priorityEl.classList.remove('todo-priority-high');
@@ -114,9 +109,8 @@ export function togglePriority(e) {
               matchingProject.projectItems[index].priority = 'High';
 
             }
-          // }
         }
-        // saveToLocalStorage()
+        saveToLocalStorage()
       }
 }
 
@@ -175,6 +169,7 @@ export function determineProject(priority) {
     togglePriority(page.todoContainer);
     renderTodosInProjectArray("Untitled Project");
   }
+  saveToLocalStorage();
 }
 
 
@@ -214,11 +209,11 @@ export function determineProject(priority) {
 // }
 
 function markAsDone(event) {
+
   const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
     if (currentTodo) {
       const todoUl = page.todoContainer.children[index];
       console.log(todoUl);
-      // const descriptionLi = todoUl.querySelector('.todo-description');
       const todoTitleSpan = todoUl.querySelector('.todo-title-text');
 
       if (!currentTodo.isDone) {
@@ -226,7 +221,9 @@ function markAsDone(event) {
         currentTodo.isDone = true;
         todoTitleSpan.classList.add('todo-marked-as-done');
         // console.log('After applying class');
-        // saveToLocalStorage()
+        saveToLocalStorage()
+      // console.log(projectArray);
+
         // console.log(localStorage.getItem('projects'));
         // console.log(localStorage.getItem('currentProject'));
 
@@ -236,13 +233,16 @@ function markAsDone(event) {
         console.log('After applying class');
         currentTodo.isDone = false;
         console.log('marked as done removed');
-        // saveToLocalStorage()
+        saveToLocalStorage()
+      // console.log(projectArray);
+
 
         // console.log(localStorage.getItem('projects'));
         // console.log(localStorage.getItem('currentProject'));
 
 
       }
+      console.log(projectArray);
     }
     console.log(currentTodo.isDone);
 }
@@ -272,10 +272,12 @@ function moveTodoItem(event) {
           const selectedProjectExists = projectArray.find((project) => project.name === dropdownArrayItem.name);
           if (selectedProjectExists) {
             const matchingProject = projectArray.find(project => project.name === currentProject);
+            console.log(selectedProjectExists);
             selectedProjectExists.addItem(currentTodo);
             matchingProject.removeItem(currentTodo);
             closePopupEl(page.moveDropDownContainer);
             renderTodosInProjectArray(currentProject);
+            saveToLocalStorage();
           }
         });
       });
@@ -321,7 +323,7 @@ function handleDateSelection(index, currentTodo) {
   currentTodo.dueDate = selectedDate;
   closePopupEl(document.getElementById(`popUpCalendar_${index}`));
   renderTodosInProjectArray(currentProject);
-  // saveToLocalStorage();
+  saveToLocalStorage();
 }
 
 
@@ -392,6 +394,7 @@ function handleTodoUpdate(event) {
     const { index, currentTodo } = getIndexAndCurrentTodo(event.target);
       currentTodo.todo = event.target.innerText;
   }
+  saveToLocalStorage();
 }
 
 
