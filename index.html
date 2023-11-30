@@ -1,70 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>to-do-list</title>
-<script defer src="bundle.js"></script></head>
-<body>
-  <main class="main">
-    <section class="page-title-container">
-      <h1 class="title">
-        Cross it <span class="out-on-title">out</span>!  
-      </h1> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>to-do-list</title>
+  <script defer src="bundle.js"></script></head>
+  <body>
+    <main class="main">
+      <section class="page-title-container">
+        <h1 class="title">Cross it <span class="out-on-title">out</span>!</h1>
+      </section>
+      <div class="todo-container"></div>
 
-    </section> 
-    <div class="todo-container"></div>
+      <div id="overlay"></div>
 
-    <div id="overlay"></div>
+      <div class="modal" id="modal">
+        <fieldset>
+          <button data-close-button class="close-modal-button">&times;</button>
+          <form action="" id="form">
+            <legend>Enter your to-do:</legend>
+            <div>
+              <input
+                type="text"
+                id="project-input"
+                name="to-do"
+                placeholder="Project Name (not required)"
+                value=""
+                maxlength="30"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                id="to-do"
+                name="to-do"
+                required
+                minlength="2"
+                maxlength="60"
+                placeholder="Enter your to-do"
+                value=""
+              />
+            </div>
 
-    <div class="modal" id="modal">
-      <fieldset>
-        <button data-close-button class="close-modal-button">&times;</button>
-        <form action="" id="form">
-          <legend>Enter your to-do:</legend>
-          <div>
-            <input type="text" id="project-input" name="to-do" placeholder="Project Name (not required)" value="" maxlength="30"/>
-          </div>
-          <div>
-            <input type="text" id="to-do" name="to-do" required minlength="2" maxlength="60" placeholder="Enter your to-do" value="This is what I have to do."/>
-          </div>
-  
-          <div>
-            <!-- <label for="date">Due date:</label> -->
-            <input type="date" id="date" name="date" minlength="10" maxlength="10" />
-          </div>
-  
-          <div class="priority-container"><p>Priority:</p>
+            <div>
+              <!-- <label for="date">Due date:</label> -->
+              <input
+                type="date"
+                id="date"
+                name="date"
+                minlength="10"
+                maxlength="10"
+              />
+            </div>
+
+            <div class="priority-container">
+              <p>Priority:</p>
               <button class="priority-btn" id="high">High</button>
               <button class="priority-btn" id="medium">Medium</button>
               <button class="priority-btn" id="low">Low</button>
-  
-          </div>
-          <!-- <div>
-           <label for="description">Description:</label> 
-            <textarea id="description" name="description" placeholder="Description: (Optional)" maxlength="500" >This is the description of what I have to do.</textarea>
-  
-          </div> -->
-          <div class="error-msg-container"> </div>
-          <div class="create-btn-container">
-            <button type="submit" id="create-todo-btn">
-              Create to-do
-            </button>
-          </div>
-        </form>
-      </fieldset>
-    </div>
-    <section class="bottom-controls">
-      <div class="project-list-container">
-        <!-- <div class="test">
-          <li class="test2">testing</li>
-          <li class="test2">testing</li>
-          <li class="test2">testing</li>
-          <li class="test2">testing</li>
-        </div> -->
+            </div>
+
+            <div class="error-msg-container"></div>
+            <div class="create-btn-container">
+              <button type="submit" id="create-todo-btn">Create to-do</button>
+            </div>
+          </form>
+        </fieldset>
       </div>
-      <div class="plus-button-container"></div>
-    </section>
-  </main>
-</body>
+      <section class="bottom-controls">
+        <div class="project-list-container">
+
+        </div>
+        <div class="plus-button-container"></div>
+      </section>
+    </main>
+  </body>
 </html>
